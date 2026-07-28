@@ -538,17 +538,132 @@ canvas{
 
 
 
+/* horizontal (side-by-side) variant used by the start screen -
+
+   image at full/real size on one side, title/controls/button
+
+   on the other, instead of everything stacked and the image
+
+   squeezed down to a thumbnail */
+
+.overlay-panel-horizontal{
+
+    display:flex;
+
+    flex-direction:row;
+
+    align-items:center;
+
+    text-align:left;
+
+    gap:44px;
+
+    max-width:900px;
+
+}
+
+
+
+.overlay-panel-media{
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+
+
+.overlay-panel-content{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+}
+
+
+
+.overlay-panel-content .overlay-title,
+
+.overlay-panel-content .overlay-subtitle{
+
+    text-align:left;
+
+}
+
+
+
 .overlay-logo{
 
     display:block;
 
-    max-width:96px;
+    max-width:280px;
 
-    max-height:96px;
+    max-height:360px;
 
-    margin:0 auto 18px;
+    width:auto;
+
+    height:auto;
+
+    margin:0;
 
     border-radius:14px;
+
+}
+
+
+
+/* stack back to vertical on narrow screens so the image
+
+   doesn't crowd the controls list */
+
+@media (max-width:820px){
+
+
+    .overlay-panel-horizontal{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        max-width:440px;
+
+    }
+
+
+    .overlay-panel-content{
+
+        align-items:center;
+
+    }
+
+
+    .overlay-panel-content .overlay-title,
+
+    .overlay-panel-content .overlay-subtitle{
+
+        text-align:center;
+
+    }
+
+
+    .overlay-logo{
+
+        max-width:180px;
+
+        max-height:180px;
+
+        margin:0 auto 18px;
+
+    }
+
 
 }
 
@@ -797,69 +912,78 @@ kbd{
 
 <div id="startScreen" class="overlay">
 
-    <div class="overlay-panel">
+    <div class="overlay-panel overlay-panel-horizontal">
 
-        <img class="overlay-logo" src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/541fffc1cea14960993a5a8e0658ab60598d9b6c653e411abc475e6338312e3f" alt="logo">
+        <div class="overlay-panel-media">
 
-        <div class="overlay-title">SQUARES VS CIRCLES</div>
-
-        <div class="overlay-subtitle">CONTROLS</div>
-
-
-        <div class="controls-config">
-
-            <div class="control-row">
-
-                <span class="control-desc">Move / Dash</span>
-
-                <div class="control-keys"><kbd>A</kbd><kbd>D</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Jump</span>
-
-                <div class="control-keys"><kbd>W</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Fly (hold)</span>
-
-                <div class="control-keys"><kbd>Q</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Charge Blast (hold / release)</span>
-
-                <div class="control-keys"><kbd>SPACE</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Regen Power (hold)</span>
-
-                <div class="control-keys"><kbd>S</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Melee / Teleport Strike</span>
-
-                <div class="control-keys"><kbd>CLICK</kbd></div>
-
-            </div>
+            <img class="overlay-logo" src="https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/541fffc1cea14960993a5a8e0658ab60598d9b6c653e411abc475e6338312e3f" alt="logo">
 
         </div>
 
 
-        <button id="startButton" class="overlay-btn">START</button>
+        <div class="overlay-panel-content">
+
+            <div class="overlay-title">SQUARES VS CIRCLES</div>
+
+            <div class="overlay-subtitle">CONTROLS</div>
+
+
+            <div class="controls-config">
+
+                <div class="control-row">
+
+                    <span class="control-desc">Move / Dash</span>
+
+                    <div class="control-keys"><kbd>A</kbd><kbd>D</kbd></div>
+
+                </div>
+
+                <div class="control-row">
+
+                    <span class="control-desc">Jump</span>
+
+                    <div class="control-keys"><kbd>W</kbd></div>
+
+                </div>
+
+                <div class="control-row">
+
+                    <span class="control-desc">Fly (hold)</span>
+
+                    <div class="control-keys"><kbd>Q</kbd></div>
+
+                </div>
+
+                <div class="control-row">
+
+                    <span class="control-desc">Charge Blast (hold / release)</span>
+
+                    <div class="control-keys"><kbd>SPACE</kbd></div>
+
+                </div>
+
+                <div class="control-row">
+
+                    <span class="control-desc">Regen Power (hold)</span>
+
+                    <div class="control-keys"><kbd>S</kbd></div>
+
+                </div>
+
+                <div class="control-row">
+
+                    <span class="control-desc">Melee / Teleport Strike</span>
+
+                    <div class="control-keys"><kbd>CLICK</kbd></div>
+
+                </div>
+
+            </div>
+
+
+            <button id="startButton" class="overlay-btn">START</button>
+
+        </div>
 
     </div>
 
@@ -4368,7 +4492,7 @@ player.charging=false;
 
 // FLAME FX WHILE CHARGING
 
-if(player.charging){
+if(player.charging && player.power > 0){
 
 
 spawnFlameParticle("orange", undefined, chargeParticleSpeedMultiplier());
@@ -4387,7 +4511,17 @@ player.regening = false;
 player.boosting = false;
 
 
-let isBoosting = keys["q"] && keys["s"];
+// boosting only actually engages while there's power left to
+
+// drain - at 0 power, Q+S falls back to a plain (non-boosted)
+
+// hover with no drain and no particles, instead of "boosting"
+
+// at zero cost forever
+
+let wantsBoost = keys["q"] && keys["s"];
+
+let isBoosting = wantsBoost && player.power > 0;
 
 
 if(isBoosting){
@@ -4412,7 +4546,7 @@ spawnFlameParticle("orange", undefined, chargeParticleSpeedMultiplier());
 
 
 }
-else if(keys["s"]){
+else if(keys["s"] && !wantsBoost){
 
 
 player.regening = true;
@@ -4426,9 +4560,13 @@ if(player.power>player.maxPower)
 player.power=player.maxPower;
 
 
+if(player.power > 0){
+
 spawnFlameParticle("orange", undefined, chargeParticleSpeedMultiplier());
 
 spawnFlameParticle("orange", undefined, chargeParticleSpeedMultiplier());
+
+}
 
 
 }
@@ -4465,7 +4603,13 @@ let targetY = mouse.y - player.height/2;
 
 // one frame - this is what actually sells "hover" over "teleport".
 
-// holding S while flying boosts both the ease and the speed cap.
+// holding S while flying boosts both the ease and the speed cap,
+
+// but ONLY while there's power left to fund it (player.boosting
+
+// is already gated on power>0 above) - once the bar is empty,
+
+// this falls straight back to normal hover speed.
 
 let ease = player.boosting ? FLY_BOOST_EASE : FLY_EASE;
 

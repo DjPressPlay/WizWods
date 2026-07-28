@@ -444,288 +444,6 @@ canvas{
 
 }
 
-/* ================================================= */
-/* START / GAME OVER OVERLAYS */
-/* ================================================= */
-
-.overlay{
-
-    position:fixed;
-
-    top:0; left:0; right:0; bottom:0;
-
-    background:rgba(8,9,12,0.72);
-
-    backdrop-filter:blur(6px);
-
-    -webkit-backdrop-filter:blur(6px);
-
-    z-index:100;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif;
-
-}
-
-
-
-.overlay-panel{
-
-    background:rgba(22,23,28,0.92);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    border-radius:20px;
-
-    box-shadow:0 20px 60px rgba(0,0,0,0.5);
-
-    padding:48px 52px;
-
-    text-align:center;
-
-    color:#f2f2f2;
-
-    min-width:340px;
-
-}
-
-
-
-.overlay-title{
-
-    font-size:34px;
-
-    font-weight:700;
-
-    letter-spacing:0.5px;
-
-    color:#ffffff;
-
-    margin-bottom:6px;
-
-}
-
-
-
-.overlay-subtitle{
-
-    font-size:13px;
-
-    color:#9a9ea6;
-
-    letter-spacing:0.5px;
-
-    margin-bottom:28px;
-
-    font-weight:500;
-
-}
-
-
-
-/* ---- controls config (start screen) ---- */
-
-.controls-config{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:10px;
-
-    margin-bottom:30px;
-
-    text-align:left;
-
-}
-
-
-
-.control-row{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    gap:18px;
-
-    padding:9px 14px;
-
-    background:rgba(255,255,255,0.04);
-
-    border:1px solid rgba(255,255,255,0.06);
-
-    border-radius:10px;
-
-}
-
-
-
-.control-keys{
-
-    display:flex;
-
-    gap:5px;
-
-    flex-shrink:0;
-
-}
-
-
-
-kbd{
-
-    font-family:inherit;
-
-    font-size:12px;
-
-    font-weight:600;
-
-    color:#e8e8e8;
-
-    background:rgba(255,255,255,0.08);
-
-    border:1px solid rgba(255,255,255,0.12);
-
-    border-radius:6px;
-
-    padding:4px 9px;
-
-    min-width:14px;
-
-    text-align:center;
-
-}
-
-
-
-.control-desc{
-
-    font-size:13px;
-
-    color:#c4c7cc;
-
-    font-weight:500;
-
-}
-
-
-
-.overlay-btn{
-
-    font-family:inherit;
-
-    font-size:16px;
-
-    font-weight:600;
-
-    letter-spacing:0.5px;
-
-    padding:13px 44px;
-
-    border-radius:12px;
-
-    border:none;
-
-    cursor:pointer;
-
-    color:#0a0a0c;
-
-    background:#ffffff;
-
-    transition:transform 0.15s ease-out, opacity 0.15s ease-out;
-
-}
-
-
-
-.overlay-btn:hover{
-
-    opacity:0.88;
-
-    transform:translateY(-1px);
-
-}
-
-
-
-.overlay-btn:active{
-
-    transform:translateY(0px) scale(0.98);
-
-}
-
-
-
-.stats-recap{
-
-    display:flex;
-
-    gap:12px;
-
-    justify-content:center;
-
-    margin-bottom:30px;
-
-}
-
-
-
-.recap-box{
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    min-width:80px;
-
-    padding:14px 16px;
-
-    border-radius:14px;
-
-    background:rgba(255,255,255,0.04);
-
-    border:1px solid rgba(255,255,255,0.07);
-
-}
-
-
-
-.recap-label{
-
-    font-size:11px;
-
-    font-weight:600;
-
-    color:#9a9ea6;
-
-    letter-spacing:1px;
-
-    margin-bottom:6px;
-
-}
-
-
-
-.recap-value{
-
-    font-size:26px;
-
-    font-weight:700;
-
-    color:#ffffff;
-
-}
-
 </style>
 
 </head>
@@ -735,122 +453,6 @@ kbd{
 
 
 <canvas id="game"></canvas>
-
-
-<div id="startScreen" class="overlay">
-
-    <div class="overlay-panel">
-
-        <div class="overlay-title">SQUARES VS CIRCLES</div>
-
-        <div class="overlay-subtitle">CONTROLS</div>
-
-
-        <div class="controls-config">
-
-            <div class="control-row">
-
-                <span class="control-desc">Move / Dash</span>
-
-                <div class="control-keys"><kbd>A</kbd><kbd>D</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Jump</span>
-
-                <div class="control-keys"><kbd>W</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Fly (hold)</span>
-
-                <div class="control-keys"><kbd>Q</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Charge Blast (hold / release)</span>
-
-                <div class="control-keys"><kbd>SPACE</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Regen Power (hold)</span>
-
-                <div class="control-keys"><kbd>S</kbd></div>
-
-            </div>
-
-            <div class="control-row">
-
-                <span class="control-desc">Melee / Teleport Strike</span>
-
-                <div class="control-keys"><kbd>CLICK</kbd></div>
-
-            </div>
-
-        </div>
-
-
-        <button id="startButton" class="overlay-btn">START</button>
-
-    </div>
-
-</div>
-
-
-<div id="gameOverScreen" class="overlay" style="display:none;">
-
-    <div class="overlay-panel">
-
-        <div class="overlay-title">GAME OVER</div>
-
-        <div class="overlay-subtitle">RUN SUMMARY</div>
-
-
-        <div class="stats-recap">
-
-            <div class="recap-box">
-
-                <span class="recap-label">HITS</span>
-
-                <span class="recap-value" id="finalHits">0</span>
-
-            </div>
-
-
-            <div class="recap-box">
-
-                <span class="recap-label">COMBO</span>
-
-                <span class="recap-value" id="finalCombo">0</span>
-
-            </div>
-
-
-            <div class="recap-box">
-
-                <span class="recap-label">WINS</span>
-
-                <span class="recap-value" id="finalWins">0</span>
-
-            </div>
-
-        </div>
-
-
-        <button id="restartButton" class="overlay-btn">PLAY AGAIN</button>
-
-    </div>
-
-</div>
 
 
 <div id="hud">
@@ -947,94 +549,6 @@ canvas.height=window.innerHeight;
 
 
 
-// =================================================
-// BACKGROUND IMAGE (drawn behind the ground)
-// =================================================
-
-const bgImage = new Image();
-
-bgImage.crossOrigin = "anonymous";
-
-let bgImageLoaded = false;
-
-
-bgImage.onload = ()=>{
-
-    bgImageLoaded = true;
-
-};
-
-
-bgImage.src = "https://assets.skool.com/f/0f7f15bc8d494ed0b4bfb968b9a216e4/a66063279a524ad8af777aeece2c3241abd6bbc7a4b84671b827ae91be4ce8d7.png";
-
-
-
-function drawBackground(){
-
-
-    if(!bgImageLoaded) return;
-
-
-    // fill the sky area above the ground line, tiled
-
-    // horizontally with a slow parallax scroll so it reads
-
-    // as sitting behind the ground rather than pinned to it
-
-    let imgH = world.groundY;
-
-    let scale = imgH / bgImage.height;
-
-    let imgW = bgImage.width * scale;
-
-
-    if(imgW<=0) return;
-
-
-    let parallax = 0.35;
-
-    let offsetX = -((camera.x * parallax) % imgW);
-
-
-    if(offsetX>0) offsetX -= imgW;
-
-
-    ctx.save();
-
-
-    for(let x=offsetX; x<canvas.width; x+=imgW){
-
-        ctx.drawImage(bgImage, x, 0, imgW, imgH);
-
-    }
-
-
-    ctx.restore();
-
-
-}
-
-
-
-// =================================================
-// GROUND
-// =================================================
-
-function drawGround(){
-
-
-    let groundH = canvas.height - world.groundY;
-
-
-    ctx.fillStyle="#c2a06b";
-
-    ctx.fillRect(0, world.groundY, world.width, groundH);
-
-
-}
-
-
-
 
 
 // =================================================
@@ -1089,9 +603,9 @@ const player={
     flying:false,
 
 
-    health:300,
+    health:100,
 
-    maxHealth:300,
+    maxHealth:100,
 
 
     power:1,
@@ -1103,11 +617,7 @@ const player={
 
     chargeFrames:0,
 
-    // how much of the power bar has been drained into the
-    // current charge - this (not a frame timer) is what
-    // determines orb size/damage now, so holding longer keeps
-    // growing the shot for as long as there's power left
-    chargeDrained:0,
+    maxChargeFrames:90,
 
 
     regening:false,
@@ -1346,6 +856,8 @@ const BOSS_HIT_RADIUS = 50;
 
 const CHARGE_DRAIN_PER_FRAME = 0.004;
 
+const SHOT_BASE_COST = 0.15;
+
 
 
 // =================================================
@@ -1425,10 +937,6 @@ const strikeRange = player.width * 5;
 
 
 canvas.addEventListener("click",e=>{
-
-
-    if(gameState!=="playing") return;
-
 
 
     let clickX = e.clientX + camera.x;
@@ -1598,37 +1106,6 @@ function springStep(pos,vel,target,stiffness,damping){
 
 
 // =================================================
-// RELEASE CHARGED SHOT
-// charge level is now driven by how much of the power
-// bar has actually been drained into this charge (not a
-// fixed frame timer), so holding longer keeps growing the
-// shot for as long as there's power left. Draining the
-// entire bar (chargeLevel = 1) is the max-size "super"
-// shot. Called on SPACE release, or automatically the
-// instant the power bar hits empty mid-charge.
-// =================================================
-
-function releaseChargedShot(){
-
-
-    let chargeLevel = clamp(player.chargeDrained / player.maxPower, 0, 1);
-
-
-    fireOrb(chargeLevel);
-
-
-    player.charging=false;
-
-    player.chargeFrames=0;
-
-    player.chargeDrained=0;
-
-
-}
-
-
-
-// =================================================
 // FIRE ORB OBJECT
 // =================================================
 
@@ -1689,14 +1166,10 @@ function fireOrb(chargeLevel){
         speed:15,
 
 
-        // uncapped growth - at chargeLevel 1 (whole power bar
-        // drained) this is a genuinely huge "super" orb, not
-        // just a slightly bigger dot
-
-        size:12 + chargeLevel*90,
+        size:12 + chargeLevel*30,
 
 
-        glow:25 + chargeLevel*140,
+        glow:25 + chargeLevel*45,
 
 
         chargeLevel:chargeLevel
@@ -1924,16 +1397,16 @@ function createExplosion(x,y,chargeLevel){
         y:y,
 
 
-        radius:5 + chargeLevel*60,
+        radius:5 + chargeLevel*15,
 
-        growth:4 + chargeLevel*20,
+        growth:4 + chargeLevel*6,
 
         life:1
 
     });
 
 
-    triggerScreenShake(6 + chargeLevel*40);
+    triggerScreenShake(6 + chargeLevel*24);
 
 
 }
@@ -2521,11 +1994,10 @@ function orbDamageFromSize(size, owner){
     if(owner==="player"){
 
 
-        // player orb: size 12 (charge 0) -> 102 (charge 1, full
-        // power bar drained - the "super" shot)
-        // damage:      10                -> 150
+        // player orb: size 12 (charge 0) -> 42 (charge 1)
+        // damage:      10                -> 35
 
-        return 10 + (size-12) * (140/90);
+        return 10 + (size-12) * (25/30);
 
 
     }
@@ -2564,15 +2036,12 @@ const COMBO_HIT_WINDOW_MS = 1200;
 const HIGH_DAMAGE_THRESHOLD = 20;
 
 
-// tuned for a real "flying back" launch - roughly a
-// 450-500px slide before it fully bleeds out, not a nudge
+const KNOCKBACK_FORCE = 18;
 
-const KNOCKBACK_FORCE = 30;
-
-const KNOCKBACK_DECAY = 0.945;
+const KNOCKBACK_DECAY = 0.885;
 
 
-const BOSS_KNOCKBACK_FORCE = 30;
+const BOSS_KNOCKBACK_FORCE = 18;
 
 const BOSS_HIGH_DAMAGE_THRESHOLD = 20;
 
@@ -2635,7 +2104,7 @@ function triggerPlayerKnockback(sourceX){
     if(!player.flying){
 
 
-        player.velocityY = -11;
+        player.velocityY = -6;
 
         player.grounded = false;
 
@@ -2668,15 +2137,6 @@ function triggerBossKnockback(boss, sourceX){
 
 
     boss.knockbackVX = dir*BOSS_KNOCKBACK_FORCE;
-
-
-    // small upward pop so it reads as being launched back,
-
-    // same spirit as the player's own knockback hop
-
-    boss.velocityY = -8;
-
-    boss.grounded = false;
 
 
     triggerScreenShake();
@@ -2774,18 +2234,6 @@ function damagePlayer(amount, sourceX){
     if(comboTriggered || damageTriggered){
 
         triggerPlayerKnockback(sourceX);
-
-    }
-
-
-
-    // ---- HEALTH HIT ZERO - END THE GAME ----
-
-    if(player.health<=0 && gameState==="playing"){
-
-
-        endGame();
-
 
     }
 
@@ -3085,11 +2533,7 @@ function updateBossDeathPieces(boss){
         popStat(winsValueEl);
 
 
-        setTimeout(()=>{
-
-            if(gameState==="playing") spawnBoss(boss, boss.side);
-
-        }, BOSS_RESPAWN_DELAY);
+        setTimeout(()=>spawnBoss(boss, boss.side), BOSS_RESPAWN_DELAY);
 
 
     }
@@ -3198,7 +2642,27 @@ window.addEventListener("keyup",e=>{
     if(e.key===" " && player.charging){
 
 
-        releaseChargedShot();
+        let chargeLevel = player.chargeFrames / player.maxChargeFrames;
+
+
+        let cost = SHOT_BASE_COST;
+
+        if(cost > player.power){
+
+            cost = player.power;
+
+        }
+
+
+        player.power -= cost;
+
+
+        fireOrb(chargeLevel);
+
+
+        player.charging=false;
+
+        player.chargeFrames=0;
 
 
     }
@@ -3213,10 +2677,6 @@ window.addEventListener("keyup",e=>{
 // =================================================
 
 window.addEventListener("keydown",e=>{
-
-
-if(gameState!=="playing") return;
-
 
 
 let key=e.key.toLowerCase();
@@ -4227,28 +3687,19 @@ if(keys[" "] && player.power>0){
 player.charging=true;
 
 
+if(player.chargeFrames < player.maxChargeFrames){
+
 player.chargeFrames++;
 
-
-let drainAmt = Math.min(CHARGE_DRAIN_PER_FRAME, player.power);
-
-
-player.power -= drainAmt;
-
-player.chargeDrained += drainAmt;
-
-
-if(player.power<=0){
-
-
-    // whole bar spent mid-hold - this IS the super attack,
-
-    // unleash it immediately rather than waiting on keyup
-
-    releaseChargedShot();
-
-
 }
+
+
+player.power -= CHARGE_DRAIN_PER_FRAME;
+
+
+if(player.power<0)
+
+player.power=0;
 
 
 }
@@ -4756,9 +4207,6 @@ canvas.height
 
 
 
-drawBackground();
-
-
 
 
 ctx.save();
@@ -4798,7 +4246,20 @@ ctx.translate(-camera.x + shakeX, shakeY);
 
 // GROUND
 
-drawGround();
+ctx.fillStyle="green";
+
+
+ctx.fillRect(
+
+0,
+
+world.groundY,
+
+world.width,
+
+canvas.height-world.groundY
+
+);
 
 
 
@@ -4885,7 +4346,7 @@ ctx.save();
 if(player.charging){
 
 
-    let chargePct = clamp(player.chargeDrained / player.maxPower, 0, 1);
+    let chargePct = player.chargeFrames / player.maxChargeFrames;
 
 
     ctx.shadowBlur = 25 + chargePct*35;
@@ -4940,48 +4401,6 @@ if(obj.type==="orb"){
 
 
 ctx.save();
-
-
-// big charged shots get an actual blur (not just a glow),
-
-// scaling up with how charged they are, plus a soft halo
-
-// behind them so a near-full-bar "super" shot visually
-
-// reads as dramatically more powerful
-
-let isBigCharge = obj.chargeLevel > 0.4;
-
-
-if(isBigCharge){
-
-
-    let blurAmt = (obj.chargeLevel-0.4) * 18;
-
-
-    ctx.filter = "blur("+blurAmt.toFixed(1)+"px)";
-
-
-    ctx.globalAlpha = 0.35;
-
-    ctx.fillStyle = obj.owner==="boss" ? "#ffb347" : "#8fe9ff";
-
-
-    ctx.beginPath();
-
-    ctx.arc(obj.x, obj.y, obj.size*1.7, 0, Math.PI*2);
-
-    ctx.fill();
-
-
-    ctx.globalAlpha = 1;
-
-    ctx.filter = "none";
-
-    ctx.filter = "blur("+(blurAmt*0.4).toFixed(1)+"px)";
-
-
-}
 
 
 ctx.shadowBlur=obj.glow;
@@ -5215,222 +4634,13 @@ function updateStatsHUD(){
 
 
 // =================================================
-// GAME STATE MACHINE (start / playing / gameover)
-// =================================================
-
-let gameState = "start";
-
-
-const startScreenEl = document.getElementById("startScreen");
-
-const gameOverScreenEl = document.getElementById("gameOverScreen");
-
-const startButtonEl = document.getElementById("startButton");
-
-const restartButtonEl = document.getElementById("restartButton");
-
-
-const finalHitsEl = document.getElementById("finalHits");
-
-const finalComboEl = document.getElementById("finalCombo");
-
-const finalWinsEl = document.getElementById("finalWins");
-
-
-
-// spawns both bosses flanking the player and staggers
-
-// their step cycles so they don't move in lockstep
-
-function spawnBothBosses(){
-
-
-    spawnBoss(bosses[0], "left");
-
-    spawnBoss(bosses[1], "right");
-
-
-    bosses[1].stepIndex = 2;
-
-    bosses[1].stepTimer = 0;
-
-    enterBossStep(bosses[1], bosses[1].stepStack[bosses[1].stepIndex]);
-
-
-}
-
-
-
-function startGame(){
-
-
-    gameState = "playing";
-
-
-    startScreenEl.style.display = "none";
-
-    gameOverScreenEl.style.display = "none";
-
-
-    spawnBothBosses();
-
-
-}
-
-
-
-function endGame(){
-
-
-    gameState = "gameover";
-
-
-    // freeze any in-flight input/motion so nothing keeps
-
-    // acting after the overlay appears
-
-    player.charging = false;
-
-    player.knockbackVX = 0;
-
-
-    for(let key in keys){
-
-        keys[key] = false;
-
-    }
-
-
-
-    finalHitsEl.textContent = hitsLanded;
-
-    finalComboEl.textContent = hudCombo;
-
-    finalWinsEl.textContent = battlesWon;
-
-
-    gameOverScreenEl.style.display = "flex";
-
-
-}
-
-
-
-function resetGame(){
-
-
-    // ---- PLAYER ----
-
-    player.x = 250;
-
-    player.y = 300;
-
-    player.velocityY = 0;
-
-    player.grounded = false;
-
-    player.smear = 0;
-
-    player.dashDirection = 0;
-
-    player.flying = false;
-
-    player.health = player.maxHealth;
-
-    player.power = player.maxPower;
-
-    player.charging = false;
-
-    player.chargeFrames = 0;
-
-    player.chargeDrained = 0;
-
-    player.regening = false;
-
-    player.hitStreak = 0;
-
-    player.lastHitTime = 0;
-
-    player.knockbackVX = 0;
-
-
-
-    // ---- CAMERA ----
-
-    camera.x = 0;
-
-
-
-    // ---- BOSSES ----
-
-    for(let b of bosses){
-
-        b.alive = false;
-
-        b.dying = false;
-
-        b.deathPieces = [];
-
-    }
-
-
-
-    // ---- WORLD FX ----
-
-    activeObjects.length = 0;
-
-    flameParticles.length = 0;
-
-    screenShake.time = 0;
-
-    screenShake.magnitude = 0;
-
-
-
-    // ---- HUD STATS ----
-
-    hitsLanded = 0;
-
-    hudCombo = 0;
-
-    battlesWon = 0;
-
-
-}
-
-
-
-startButtonEl.addEventListener("click", ()=>{
-
-    startGame();
-
-});
-
-
-
-restartButtonEl.addEventListener("click", ()=>{
-
-    resetGame();
-
-    startGame();
-
-});
-
-
-
-// =================================================
 // GAME LOOP
 // =================================================
 
 function loop(){
 
 
-if(gameState==="playing"){
-
-    update();
-
-}
-
+update();
 
 draw();
 
@@ -5446,6 +4656,26 @@ requestAnimationFrame(loop);
 
 
 loop();
+
+
+// spawn both bosses at game start - one flanking the
+
+// player on each side, both fully active from the outset
+
+spawnBoss(bosses[0], "left");
+
+spawnBoss(bosses[1], "right");
+
+
+// stagger their step cycles so they don't transition
+
+// through search/fire/melee/charge in perfect lockstep
+
+bosses[1].stepIndex = 2;
+
+bosses[1].stepTimer = 0;
+
+enterBossStep(bosses[1], bosses[1].stepStack[bosses[1].stepIndex]);
 
 
 

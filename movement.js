@@ -143,9 +143,9 @@ setInterval(() => {
 
 // ===== SPECIAL BUTTON → ATTACK =====
 // Hooks into the existing #special-button element already in the HTML.
-const specialButtonEl = document.getElementById('special-button');
+const specialAttackButtonEl = document.getElementById('special-button');
 
-if (specialButtonEl) {
+if (specialAttackButtonEl) {
   const startAttack = () => {
     player.effect = 'atk';
     player.effectFrame = 0;
@@ -157,9 +157,9 @@ if (specialButtonEl) {
     renderPlayerIcon();
   };
 
-  specialButtonEl.addEventListener('mousedown', startAttack);
-  specialButtonEl.addEventListener('mouseup', stopAttack);
-  specialButtonEl.addEventListener('mouseleave', stopAttack);
-  specialButtonEl.addEventListener('touchstart', startAttack);
-  specialButtonEl.addEventListener('touchend', stopAttack);
+  specialAttackButtonEl.addEventListener('mousedown', startAttack);
+  specialAttackButtonEl.addEventListener('mouseup', stopAttack);
+  specialAttackButtonEl.addEventListener('mouseleave', stopAttack);
+  specialAttackButtonEl.addEventListener('touchstart', startAttack);
+  specialAttackButtonEl.addEventListener('touchend', stopAttack);
 }

@@ -12,21 +12,20 @@ const DIRECTIONS = ['down', 'up', 'left']; // 'right' uses the 'left' sprite, mi
 
 // main sprite array: [direction][state][frame]
 // 'right' has no entry here — it reuses 'left' and gets flipped horizontally.
+const IDLE_SPRITE = 'assets/player/idle.png';
+
 const SPRITES = {
   down: {
-    idle: ['assets/player/down_idle.png'],
-    walk: ['assets/player/down_walk1.png', 'assets/player/down_walk2.png'],
-    run:  ['assets/player/down_run1.png', 'assets/player/down_run2.png'],
+    walk: ['assets/player/down_walk1.png'],
+    run:  ['assets/player/down_run1.png'],
   },
   up: {
-    idle: ['assets/player/up_idle.png'],
-    walk: ['assets/player/up_walk1.png', 'assets/player/up_walk2.png'],
-    run:  ['assets/player/up_run1.png', 'assets/player/up_run2.png'],
+    walk: ['assets/player/up_walk1.png'],
+    run:  ['assets/player/up_run1.png'],
   },
   left: {
-    idle: ['assets/player/left_idle.png'],
-    walk: ['assets/player/left_walk1.png', 'assets/player/left_walk2.png'],
-    run:  ['assets/player/left_run1.png', 'assets/player/left_run2.png'],
+    walk: ['assets/player/left_walk1.png'],
+    run:  ['assets/player/left_run1.png'],
   },
 };
 
@@ -56,7 +55,9 @@ function renderPlayerIcon() {
 
   const content = player.effect
     ? EFFECTS[player.effect][player.effectFrame]
-    : SPRITES[spriteDirection][player.state][player.frameIndex];
+    : player.state === 'idle'
+      ? IDLE_SPRITE
+      : SPRITES[spriteDirection][player.state][player.frameIndex];
 
   spriteEl.src = content;
 

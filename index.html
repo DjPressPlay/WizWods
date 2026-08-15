@@ -170,8 +170,9 @@
 
   /* ===== PLAYER ICON SPRITE (shows current movement.js frame) ===== */
   #player-icon-sprite {
-    font-size: 48px;
-    line-height: 1;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
     user-select: none;
   }
 
@@ -317,7 +318,7 @@
 
     <!-- ===== PLAYER ICON CONTAINER (click to toggle message dropdown) ===== -->
     <div id="player-icon-container" onclick="toggleMessageDropdown()">
-      <span id="player-icon-sprite"></span>
+      <img id="player-icon-sprite" alt="player">
     </div>
 
     <!-- ===== MESSAGE DROPDOWN CONTAINER (positioned relative to full hud-container) ===== -->

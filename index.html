@@ -152,7 +152,6 @@
 
   /* ===== PLAYER ICON CONTAINER (clickable, opens message dropdown) ===== */
   #player-icon-container {
-    position: relative;
     width: 130px;
     height: 100%;
     background: rgba(0,0,0,0.4);
@@ -163,7 +162,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: visible;
   }
 
   #player-icon-container:hover {
@@ -172,16 +170,10 @@
 
   /* ===== PLAYER ICON SPRITE (shows current movement.js frame) ===== */
   #player-icon-sprite {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 150px;
+    width: 260px;
+    height: 260px;
     object-fit: contain;
     user-select: none;
-    z-index: 12;
-    pointer-events: none;
   }
 
   /* ===== MESSAGE DROPDOWN CONTAINER (matches HUD styling, spans full HUD width, expands to fit text) ===== */

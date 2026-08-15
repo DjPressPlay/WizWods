@@ -5,44 +5,183 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>HUD</title>
 <style>
+  /* ===== PAGE WRAPPER ===== */
   html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    background: #000;
-    overflow: hidden;
   }
 
   #game-page {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 20px;
+    box-sizing: border-box;
   }
 
-  #hud-container {
+  /* ===== MOVEMENT CONTROLLER CONTAINER (WASD keys, bottom left of screen) ===== */
+  #movement-controller-container {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    bottom: 24px;
+    left: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(2, 44px);
+    gap: 4px;
+    z-index: 10;
+  }
+
+  .controller-key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(20,20,25,0.35);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.6);
+    user-select: none;
+  }
+
+  .controller-key.pressed {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.95);
+    transform: scale(0.92);
+  }
+
+  #key-w { grid-column: 2; grid-row: 1; }
+  #key-a { grid-column: 1; grid-row: 2; }
+  #key-s { grid-column: 2; grid-row: 2; }
+  #key-d { grid-column: 3; grid-row: 2; }
+
+  /* ===== SPECIAL ACTION BUTTON CONTAINER (bottom right of screen) ===== */
+  #special-button-container {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    z-index: 10;
+  }
+
+  #special-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(214, 165, 69, 0.3);
+    border: 1px solid rgba(214, 165, 69, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: rgba(255,255,255,0.75);
+    user-select: none;
+    cursor: pointer;
+  }
+
+  #special-button.pressed {
+    background: rgba(214, 165, 69, 0.55);
+    border-color: rgba(214, 165, 69, 0.9);
+    color: rgba(255,255,255,0.95);
+    transform: scale(0.92);
+  }
+
+  /* ===== CLICK SPARK EFFECT (future touch feedback placeholder) ===== */
+  .click-spark {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d6a545;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(1);
+    animation: spark-burst 0.4s ease-out forwards;
+    z-index: 999;
+  }
+
+  @keyframes spark-burst {
+    0% {
+      transform: translate(-50%, -50%) scale(0.4);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(3);
+      opacity: 0;
+    }
+  }
+
+  /* ===== HUD OUTER CONTAINER ===== */
+  #hud-container {
+    position: relative;
     width: 540px;
     height: 140px;
     background: linear-gradient(180deg, rgba(20,20,25,0.85), rgba(10,10,14,0.85));
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 14px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-    z-index: 10;
     display: flex;
   }
 
+  /* ===== PLAYER ICON CONTAINER (clickable, opens message dropdown) ===== */
   #player-icon-container {
     width: 130px;
     height: 100%;
     background: rgba(0,0,0,0.4);
     border-right: 1px solid rgba(255,255,255,0.15);
-    border-radius: 14px 0 0 14px;
+    border-radius: 0 0 0 14px;
     flex-shrink: 0;
+    cursor: pointer;
   }
 
+  #player-icon-container:hover {
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ===== MESSAGE DROPDOWN CONTAINER (matches HUD styling, spans full HUD width, expands to fit text) ===== */
+  #message-dropdown-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    width: 100%;
+    height: auto;
+    min-height: 60px;
+    background: linear-gradient(180deg, rgba(20,20,25,0.85), rgba(10,10,14,0.85));
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    z-index: 20;
+  }
+
+  #message-dropdown-container.open {
+    display: flex;
+  }
+
+  #message-dropdown-text {
+    font-family: sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+  }
+
+  /* ===== STATS CONTAINER (health, magic charge, power level) ===== */
   #stats-container {
     width: 250px;
     height: 100%;
@@ -74,8 +213,20 @@
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 6px;
+    overflow: hidden;
   }
 
+  .stat-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.2s ease;
+  }
+
+  #health-bar .stat-fill { background: #d64545; }
+  #magic-charge-bar .stat-fill { background: #4576d6; }
+  #power-level-bar .stat-fill { background: #d6a545; }
+
+  /* ===== HUD DIVIDER (between stats and currency) ===== */
   #hud-divider {
     width: 1px;
     height: 100%;
@@ -83,6 +234,7 @@
     flex-shrink: 0;
   }
 
+  /* ===== CURRENCY CONTAINER (cash, diamonds, soul cores, goblin teeth) ===== */
   #currency-container {
     flex: 1;
     height: 100%;
@@ -119,29 +271,49 @@
     font-size: 13px;
     color: rgba(255,255,255,0.85);
   }
+
+  .stat-value {
+    font-family: sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+  }
 </style>
 </head>
 <body>
 
 <div id="game-page">
 
+  <!-- ===== HUD OUTER CONTAINER ===== -->
   <div id="hud-container">
-    <div id="player-icon-container"></div>
+
+    <!-- ===== PLAYER ICON CONTAINER (click to toggle message dropdown) ===== -->
+    <div id="player-icon-container" onclick="toggleMessageDropdown()"></div>
+
+    <!-- ===== MESSAGE DROPDOWN CONTAINER (positioned relative to full hud-container) ===== -->
+    <div id="message-dropdown-container">
+      <span id="message-dropdown-text">No Mission</span>
+    </div>
+
+    <!-- ===== STATS CONTAINER ===== -->
     <div id="stats-container">
       <div class="stat-row">
         <span class="stat-label">Health</span>
-        <div id="health-bar" class="stat-bar"></div>
+        <div id="health-bar" class="stat-bar"><div class="stat-fill"></div></div>
       </div>
       <div class="stat-row">
         <span class="stat-label">Magic Charge</span>
-        <div id="magic-charge-bar" class="stat-bar"></div>
+        <div id="magic-charge-bar" class="stat-bar"><div class="stat-fill"></div></div>
       </div>
       <div class="stat-row">
         <span class="stat-label">Power Level</span>
-        <div id="power-level-bar" class="stat-bar"></div>
+        <span class="stat-value" id="power-level-value">1</span>
       </div>
     </div>
+
+    <!-- ===== HUD DIVIDER ===== -->
     <div id="hud-divider"></div>
+
+    <!-- ===== CURRENCY CONTAINER ===== -->
     <div id="currency-container">
       <div class="currency-row">
         <div class="currency-icon" id="cash-icon">💵</div>
@@ -160,9 +332,129 @@
         <span class="currency-value" id="goblin-teeth-value">0</span>
       </div>
     </div>
+
+  </div>
+
+  <!-- ===== MOVEMENT CONTROLLER CONTAINER (WASD keys) ===== -->
+  <div id="movement-controller-container">
+    <div class="controller-key" id="key-w">W</div>
+    <div class="controller-key" id="key-a">A</div>
+    <div class="controller-key" id="key-s">S</div>
+    <div class="controller-key" id="key-d">D</div>
+  </div>
+
+  <!-- ===== SPECIAL ACTION BUTTON CONTAINER ===== -->
+  <div id="special-button-container">
+    <div id="special-button">SPECIAL</div>
   </div>
 
 </div>
+
+<script>
+  const hudState = {
+    health: 300,
+    healthMax: 300,
+    magicCharge: 100,
+    magicChargeMax: 100,
+    powerLevel: 1,
+    cash: 240,
+    diamonds: 12,
+    soulCores: 3,
+    goblinTeeth: 47
+  };
+
+  function setStatBar(barId, current, max) {
+    const pct = Math.max(0, Math.min(100, (current / max) * 100));
+    document.querySelector(`#${barId} .stat-fill`).style.width = pct + '%';
+  }
+
+  function setCurrency(key, value) {
+    document.getElementById(`${key}-value`).textContent = value;
+  }
+
+  function setStatValue(id, value) {
+    document.getElementById(id).textContent = value;
+  }
+
+  function renderHud() {
+    setStatBar('health-bar', hudState.health, hudState.healthMax);
+    setStatBar('magic-charge-bar', hudState.magicCharge, hudState.magicChargeMax);
+    setStatValue('power-level-value', hudState.powerLevel);
+
+    setCurrency('cash', hudState.cash);
+    setCurrency('diamonds', hudState.diamonds);
+    setCurrency('soul-cores', hudState.soulCores);
+    setCurrency('goblin-teeth', hudState.goblinTeeth);
+  }
+
+  /* ===== MESSAGE DROPDOWN TOGGLE ===== */
+  function toggleMessageDropdown() {
+    document.getElementById('message-dropdown-container').classList.toggle('open');
+  }
+
+  /* ===== MOVEMENT CONTROLLER KEY RESPONSE ===== */
+  const controllerKeyMap = {
+    'w': 'key-w', 'W': 'key-w', 'ArrowUp': 'key-w',
+    'a': 'key-a', 'A': 'key-a', 'ArrowLeft': 'key-a',
+    's': 'key-s', 'S': 'key-s', 'ArrowDown': 'key-s',
+    'd': 'key-d', 'D': 'key-d', 'ArrowRight': 'key-d'
+  };
+
+  function pressControllerKey(elementId) {
+    document.getElementById(elementId).classList.add('pressed');
+  }
+
+  function releaseControllerKey(elementId) {
+    document.getElementById(elementId).classList.remove('pressed');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const elementId = controllerKeyMap[e.key];
+    if (elementId) pressControllerKey(elementId);
+  });
+
+  document.addEventListener('keyup', (e) => {
+    const elementId = controllerKeyMap[e.key];
+    if (elementId) releaseControllerKey(elementId);
+  });
+
+  ['key-w', 'key-a', 'key-s', 'key-d'].forEach((elementId) => {
+    const keyEl = document.getElementById(elementId);
+    keyEl.addEventListener('mousedown', () => pressControllerKey(elementId));
+    keyEl.addEventListener('mouseup', () => releaseControllerKey(elementId));
+    keyEl.addEventListener('mouseleave', () => releaseControllerKey(elementId));
+    keyEl.addEventListener('touchstart', (e) => { e.preventDefault(); pressControllerKey(elementId); });
+    keyEl.addEventListener('touchend', (e) => { e.preventDefault(); releaseControllerKey(elementId); });
+  });
+
+  /* ===== SPECIAL ACTION BUTTON RESPONSE ===== */
+  const specialButtonEl = document.getElementById('special-button');
+  specialButtonEl.addEventListener('mousedown', () => specialButtonEl.classList.add('pressed'));
+  specialButtonEl.addEventListener('mouseup', () => specialButtonEl.classList.remove('pressed'));
+  specialButtonEl.addEventListener('mouseleave', () => specialButtonEl.classList.remove('pressed'));
+  specialButtonEl.addEventListener('touchstart', (e) => { e.preventDefault(); specialButtonEl.classList.add('pressed'); });
+  specialButtonEl.addEventListener('touchend', (e) => { e.preventDefault(); specialButtonEl.classList.remove('pressed'); });
+
+  /* ===== CLICK SPARK EFFECT (left click anywhere on screen) ===== */
+  const gamePageEl = document.getElementById('game-page');
+
+  function spawnClickSpark(x, y) {
+    const spark = document.createElement('div');
+    spark.className = 'click-spark';
+    spark.style.left = x + 'px';
+    spark.style.top = y + 'px';
+    gamePageEl.appendChild(spark);
+    spark.addEventListener('animationend', () => spark.remove());
+  }
+
+  gamePageEl.addEventListener('click', (e) => {
+    if (e.button !== 0) return;
+    const rect = gamePageEl.getBoundingClientRect();
+    spawnClickSpark(e.clientX - rect.left, e.clientY - rect.top);
+  });
+
+  renderHud();
+</script>
 
 </body>
 </html>

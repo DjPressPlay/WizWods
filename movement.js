@@ -9,9 +9,10 @@
 // No other function, file, or piece of logic needs to change.
 
 const STATES = ['idle', 'walk', 'run'];
-const DIRECTIONS = ['down', 'up', 'left', 'right'];
+const DIRECTIONS = ['down', 'up', 'right']; // 'left' uses the 'right' sprite, mirrored
 
 // main sprite array: [direction][state][frame]
+// 'left' has no entry here — it reuses 'right' and gets flipped horizontally.
 const SPRITES = {
   down: {
     idle: ['🧙'],
@@ -19,11 +20,6 @@ const SPRITES = {
     run:  ['🏃', '🏃‍♂️'],
   },
   up: {
-    idle: ['🧙'],
-    walk: ['🚶', '🧍'],
-    run:  ['🏃', '🏃‍♂️'],
-  },
-  left: {
     idle: ['🧙'],
     walk: ['🚶', '🧍'],
     run:  ['🏃', '🏃‍♂️'],
@@ -55,13 +51,19 @@ function renderPlayerIcon() {
   const spriteEl = document.getElementById('player-icon-sprite');
   if (!spriteEl) return;
 
+  // 'left' has no sprite set of its own — it reuses 'right' and gets mirrored.
+  const isFacingLeft = player.direction === 'left';
+  const spriteDirection = isFacingLeft ? 'right' : player.direction;
+
   const content = player.effect
     ? EFFECTS[player.effect][player.effectFrame]
-    : SPRITES[player.direction][player.state][player.frameIndex];
+    : SPRITES[spriteDirection][player.state][player.frameIndex];
 
   // FUTURE IMAGE SWAP — change this one line to:
   //   spriteEl.style.backgroundImage = `url('${content}')`;
   spriteEl.textContent = content;
+
+  spriteEl.style.transform = isFacingLeft ? 'scaleX(-1)' : 'scaleX(1)';
 }
 
 // ===== MOVEMENT INPUT =====
@@ -138,3 +140,26 @@ setInterval(() => {
     if (key.cooldown > 0) key.cooldown--;
   }
 }, TICK_MS);
+
+// ===== SPECIAL BUTTON → ATTACK =====
+// Hooks into the existing #special-button element already in the HTML.
+const specialButtonEl = document.getElementById('special-button');
+
+if (specialButtonEl) {
+  const startAttack = () => {
+    player.effect = 'atk';
+    player.effectFrame = 0;
+    renderPlayerIcon();
+  };
+
+  const stopAttack = () => {
+    player.effect = null;
+    renderPlayerIcon();
+  };
+
+  specialButtonEl.addEventListener('mousedown', startAttack);
+  specialButtonEl.addEventListener('mouseup', stopAttack);
+  specialButtonEl.addEventListener('mouseleave', stopAttack);
+  specialButtonEl.addEventListener('touchstart', startAttack);
+  specialButtonEl.addEventListener('touchend', stopAttack);
+}

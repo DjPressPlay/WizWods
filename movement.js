@@ -1,11 +1,10 @@
 // ===== MOVEMENT.JS =====
 // Emoji are placeholders.
 //
-// FUTURE IMAGE SWAP — 2 edits total, both inside this file, nowhere else:
+// IMAGE SWAP:
 //   1. Replace the emoji strings inside SPRITES and EFFECTS below with image
 //      file paths (e.g. 'assets/player/down_walk1.png').
-//   2. Inside renderPlayerIcon(), change the line that sets textContent to
-//      instead set backgroundImage (or an <img> src) using the same value.
+//   2. renderPlayerIcon() below sets the <img> element's src to that path directly.
 // No other function, file, or piece of logic needs to change.
 
 const STATES = ['idle', 'walk', 'run'];
@@ -15,26 +14,26 @@ const DIRECTIONS = ['down', 'up', 'left']; // 'right' uses the 'left' sprite, mi
 // 'right' has no entry here — it reuses 'left' and gets flipped horizontally.
 const SPRITES = {
   down: {
-    idle: ['🧙'],
-    walk: ['🚶', '🧍'],
-    run:  ['🏃', '🏃‍♂️'],
+    idle: ['assets/player/down_idle.png'],
+    walk: ['assets/player/down_walk1.png', 'assets/player/down_walk2.png'],
+    run:  ['assets/player/down_run1.png', 'assets/player/down_run2.png'],
   },
   up: {
-    idle: ['🧙'],
-    walk: ['🚶', '🧍'],
-    run:  ['🏃', '🏃‍♂️'],
+    idle: ['assets/player/up_idle.png'],
+    walk: ['assets/player/up_walk1.png', 'assets/player/up_walk2.png'],
+    run:  ['assets/player/up_run1.png', 'assets/player/up_run2.png'],
   },
   left: {
-    idle: ['🧙'],
-    walk: ['🚶', '🧍'],
-    run:  ['🏃', '🏃‍♂️'],
+    idle: ['assets/player/left_idle.png'],
+    walk: ['assets/player/left_walk1.png', 'assets/player/left_walk2.png'],
+    run:  ['assets/player/left_run1.png', 'assets/player/left_run2.png'],
   },
 };
 
 // separate overlay array — NOT part of STATES
 const EFFECTS = {
-  atk:     ['⚔️'],
-  get_dmg: ['😵'],
+  atk:     ['assets/player/atk.png'],
+  get_dmg: ['assets/player/get_dmg.png'],
 };
 
 const player = {
@@ -59,9 +58,7 @@ function renderPlayerIcon() {
     ? EFFECTS[player.effect][player.effectFrame]
     : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-  // FUTURE IMAGE SWAP — change this one line to:
-  //   spriteEl.style.backgroundImage = `url('${content}')`;
-  spriteEl.textContent = content;
+  spriteEl.src = content;
 
   spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
 }

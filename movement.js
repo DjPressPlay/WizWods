@@ -9,10 +9,10 @@
 // No other function, file, or piece of logic needs to change.
 
 const STATES = ['idle', 'walk', 'run'];
-const DIRECTIONS = ['down', 'up', 'right']; // 'left' uses the 'right' sprite, mirrored
+const DIRECTIONS = ['down', 'up', 'left']; // 'right' uses the 'left' sprite, mirrored
 
 // main sprite array: [direction][state][frame]
-// 'left' has no entry here — it reuses 'right' and gets flipped horizontally.
+// 'right' has no entry here — it reuses 'left' and gets flipped horizontally.
 const SPRITES = {
   down: {
     idle: ['🧙'],
@@ -24,7 +24,7 @@ const SPRITES = {
     walk: ['🚶', '🧍'],
     run:  ['🏃', '🏃‍♂️'],
   },
-  right: {
+  left: {
     idle: ['🧙'],
     walk: ['🚶', '🧍'],
     run:  ['🏃', '🏃‍♂️'],
@@ -51,9 +51,9 @@ function renderPlayerIcon() {
   const spriteEl = document.getElementById('player-icon-sprite');
   if (!spriteEl) return;
 
-  // 'left' has no sprite set of its own — it reuses 'right' and gets mirrored.
-  const isFacingLeft = player.direction === 'left';
-  const spriteDirection = isFacingLeft ? 'right' : player.direction;
+  // 'right' has no sprite set of its own — it reuses 'left' and gets mirrored.
+  const isFacingRight = player.direction === 'right';
+  const spriteDirection = isFacingRight ? 'left' : player.direction;
 
   const content = player.effect
     ? EFFECTS[player.effect][player.effectFrame]
@@ -63,7 +63,7 @@ function renderPlayerIcon() {
   //   spriteEl.style.backgroundImage = `url('${content}')`;
   spriteEl.textContent = content;
 
-  spriteEl.style.transform = isFacingLeft ? 'scaleX(-1)' : 'scaleX(1)';
+  spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
 }
 
 // ===== MOVEMENT INPUT =====

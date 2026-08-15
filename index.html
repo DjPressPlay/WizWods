@@ -159,10 +159,20 @@
     border-radius: 0 0 0 14px;
     flex-shrink: 0;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   #player-icon-container:hover {
     background: rgba(255,255,255,0.06);
+  }
+
+  /* ===== PLAYER ICON SPRITE (shows current movement.js frame) ===== */
+  #player-icon-sprite {
+    font-size: 48px;
+    line-height: 1;
+    user-select: none;
   }
 
   /* ===== MESSAGE DROPDOWN CONTAINER (matches HUD styling, spans full HUD width, expands to fit text) ===== */
@@ -306,7 +316,9 @@
     <div id="demon-girl-container"></div>
 
     <!-- ===== PLAYER ICON CONTAINER (click to toggle message dropdown) ===== -->
-    <div id="player-icon-container" onclick="toggleMessageDropdown()"></div>
+    <div id="player-icon-container" onclick="toggleMessageDropdown()">
+      <span id="player-icon-sprite"></span>
+    </div>
 
     <!-- ===== MESSAGE DROPDOWN CONTAINER (positioned relative to full hud-container) ===== -->
     <div id="message-dropdown-container">
@@ -369,6 +381,7 @@
 
 </div>
 
+<script src="movement.js"></script>
 <script>
   const hudState = {
     health: 300,
@@ -473,6 +486,7 @@
   });
 
   renderHud();
+  renderPlayerIcon();
 </script>
 
 </body>

@@ -134,6 +134,22 @@
     display: flex;
   }
 
+  /* ===== DEMON GIRL IMAGE CONTAINER (circle, sits directly next to HUD, no overlap) ===== */
+  #demon-girl-container {
+    position: absolute;
+    top: 15px;
+    left: -110px;
+    width: 110px;
+    height: 110px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: rgba(20,20,25,0.85);
+    border: 3px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    z-index: 15;
+    pointer-events: none;
+  }
+
   /* ===== PLAYER ICON CONTAINER (clickable, opens message dropdown) ===== */
   #player-icon-container {
     width: 130px;
@@ -285,6 +301,9 @@
 
   <!-- ===== HUD OUTER CONTAINER ===== -->
   <div id="hud-container">
+
+    <!-- ===== DEMON GIRL IMAGE CONTAINER ===== -->
+    <div id="demon-girl-container"></div>
 
     <!-- ===== PLAYER ICON CONTAINER (click to toggle message dropdown) ===== -->
     <div id="player-icon-container" onclick="toggleMessageDropdown()"></div>

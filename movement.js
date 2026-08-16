@@ -49,6 +49,8 @@ const player = {
   vy: 0,
 };
 
+let gamePaused = false; // set true by zones.js while an interaction overlay is open
+
 const MAX_WALK_SPEED = 0.3; // percent per tick
 const MAX_RUN_SPEED = 0.6;  // percent per tick
 const ACCEL = 0.05;         // velocity ramp-up per tick
@@ -185,6 +187,8 @@ document.addEventListener('keyup', (e) => {
 
 // tick down every key's double-tap cooldown, and move the player position
 setInterval(() => {
+  if (gamePaused) return;
+
   for (const direction in moveKeys) {
     const key = moveKeys[direction];
     if (key.cooldown > 0) key.cooldown--;

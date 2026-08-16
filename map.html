@@ -30,17 +30,32 @@
     height: 100%;
     aspect-ratio: 1024 / 1536;
     max-width: 100%;
-    margin-top: 7%;
+    margin-top: 5%;
     background-image: url('assets/map/map_bg.png');
     background-size: cover;
     background-position: center;
+  }
+
+  /* ===== ON-MAP PLAYER CHARACTER ===== */
+  #map-player-sprite {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 5;
   }
 </style>
 </head>
 <body>
 
 <div id="map-container">
-  <div id="map-stage"></div>
+  <div id="map-stage">
+    <img id="map-player-sprite" alt="player">
+  </div>
 </div>
 
 <script>

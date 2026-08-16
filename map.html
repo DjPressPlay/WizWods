@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Map Demo</title>
+<title>Map</title>
 <style>
   html, body {
     margin: 0;
@@ -41,8 +41,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 84px;
-    height: 84px;
+    width: 128px;
+    height: 128px;
     transform: translate(-50%, -50%);
     object-fit: contain;
     pointer-events: none;
@@ -99,6 +99,16 @@
 
   loadHud();
   document.getElementById('map-player-sprite').src = 'assets/player/idle.png';
+
+  function updateMapPlayerPosition() {
+    const spriteEl = document.getElementById('map-player-sprite');
+    if (typeof player !== 'undefined' && spriteEl) {
+      spriteEl.style.left = player.x + '%';
+      spriteEl.style.top = player.y + '%';
+    }
+    requestAnimationFrame(updateMapPlayerPosition);
+  }
+  updateMapPlayerPosition();
 </script>
 
 </body>

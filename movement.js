@@ -45,10 +45,14 @@ const player = {
 
   x: 50, // percent of map width
   y: 50, // percent of map height
+  vx: 0, // current velocity, percent per tick
+  vy: 0,
 };
 
-const WALK_SPEED = 0.3; // percent per tick
-const RUN_SPEED = 0.6;  // percent per tick
+const MAX_WALK_SPEED = 0.3; // percent per tick
+const MAX_RUN_SPEED = 0.6;  // percent per tick
+const ACCEL = 0.05;         // velocity ramp-up per tick
+const FRICTION = 0.08;      // velocity decay per tick when no input
 
 // Reads current player state and writes the matching sprite into the DOM.
 function renderPlayerIcon() {
@@ -106,15 +110,13 @@ function handleMoveKeyDown(direction) {
   if (key.cooldown > 0) {
     // second press landed within the window — run
     key.running = true;
-    player.state = 'run';
   } else {
     // first press — walk
     key.running = false;
-    player.state = 'walk';
   }
 
   key.cooldown = DOUBLE_TAP_WINDOW;
-  renderPlayerIcon();
+  updateMovementState();
 }
 
 function handleMoveKeyUp(direction) {
@@ -123,7 +125,27 @@ function handleMoveKeyUp(direction) {
 
   key.held = false;
   key.running = false;
-  player.state = 'idle';
+
+  // if another direction key is still held, keep facing/moving that way
+  const stillHeld = Object.keys(moveKeys).find((dir) => moveKeys[dir].held);
+  if (stillHeld) {
+    player.direction = stillHeld;
+  }
+
+  updateMovementState();
+}
+
+// Recomputes player.state ('idle' | 'walk' | 'run') from all currently held keys.
+function updateMovementState() {
+  const heldDirections = Object.keys(moveKeys).filter((dir) => moveKeys[dir].held);
+
+  if (heldDirections.length === 0) {
+    player.state = 'idle';
+  } else {
+    const anyRunning = heldDirections.some((dir) => moveKeys[dir].running);
+    player.state = anyRunning ? 'run' : 'walk';
+  }
+
   renderPlayerIcon();
 }
 
@@ -144,13 +166,32 @@ setInterval(() => {
     if (key.cooldown > 0) key.cooldown--;
   }
 
-  if (player.state === 'walk' || player.state === 'run') {
-    const speed = player.state === 'run' ? RUN_SPEED : WALK_SPEED;
-    if (player.direction === 'up') player.y -= speed;
-    if (player.direction === 'down') player.y += speed;
-    if (player.direction === 'left') player.x -= speed;
-    if (player.direction === 'right') player.x += speed;
+  // build input direction vector from held keys
+  let dx = 0;
+  let dy = 0;
+  if (moveKeys.up.held) dy -= 1;
+  if (moveKeys.down.held) dy += 1;
+  if (moveKeys.left.held) dx -= 1;
+  if (moveKeys.right.held) dx += 1;
+
+  if (dx !== 0 || dy !== 0) {
+    // normalize so diagonal input isn't faster than straight input
+    const length = Math.sqrt(dx * dx + dy * dy);
+    const maxSpeed = player.state === 'run' ? MAX_RUN_SPEED : MAX_WALK_SPEED;
+    const targetVx = (dx / length) * maxSpeed;
+    const targetVy = (dy / length) * maxSpeed;
+
+    // accelerate current velocity toward the target velocity
+    player.vx += (targetVx - player.vx) * ACCEL;
+    player.vy += (targetVy - player.vy) * ACCEL;
+  } else {
+    // no input — decay velocity toward 0 (slide to a stop)
+    player.vx += (0 - player.vx) * FRICTION;
+    player.vy += (0 - player.vy) * FRICTION;
   }
+
+  player.x += player.vx;
+  player.y += player.vy;
 }, TICK_MS);
 
 // ===== SPECIAL BUTTON → ATTACK =====

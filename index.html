@@ -125,8 +125,8 @@
   /* ===== HUD OUTER CONTAINER ===== */
   #hud-container {
     position: relative;
-    width: 540px;
-    height: 140px;
+    width: 459px;
+    height: 119px;
     background: linear-gradient(180deg, rgba(20,20,25,0.85), rgba(10,10,14,0.85));
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 14px;
@@ -137,14 +137,14 @@
   /* ===== DEMON GIRL IMAGE CONTAINER (circle, sits directly next to HUD, no overlap) ===== */
   #demon-girl-container {
     position: absolute;
-    top: -23px;
-    left: -186px;
-    width: 186px;
-    height: 186px;
+    top: -19.6px;
+    left: -158.1px;
+    width: 158.1px;
+    height: 158.1px;
     box-sizing: border-box;
     border-radius: 50%;
     background: rgba(20,20,25,0.85);
-    border: 3px solid rgba(255,255,255,0.9);
+    border: 2.5px solid rgba(255,255,255,0.9);
     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     z-index: 15;
     pointer-events: none;
@@ -159,11 +159,11 @@
 
   /* ===== PLAYER ICON CONTAINER (clickable, opens message dropdown) ===== */
   #player-icon-container {
-    width: 130px;
+    width: 110.5px;
     height: 100%;
     background: rgba(0,0,0,0.4);
     border-right: 1px solid rgba(255,255,255,0.15);
-    border-radius: 0 0 0 14px;
+    border-radius: 0 0 0 11.9px;
     flex-shrink: 0;
     cursor: pointer;
     display: flex;
@@ -177,8 +177,8 @@
 
   /* ===== PLAYER ICON SPRITE (shows current movement.js frame) ===== */
   #player-icon-sprite {
-    width: 260px;
-    height: 260px;
+    width: 221px;
+    height: 221px;
     object-fit: contain;
     user-select: none;
   }
@@ -188,10 +188,10 @@
     position: absolute;
     top: 100%;
     left: 0;
-    margin-top: 8px;
+    margin-top: 6.8px;
     width: 100%;
     height: auto;
-    min-height: 60px;
+    min-height: 51px;
     background: linear-gradient(180deg, rgba(20,20,25,0.85), rgba(10,10,14,0.85));
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 14px;
@@ -199,7 +199,7 @@
     display: none;
     align-items: center;
     justify-content: center;
-    padding: 14px 20px;
+    padding: 11.9px 17px;
     box-sizing: border-box;
     z-index: 20;
   }
@@ -210,20 +210,20 @@
 
   #message-dropdown-text {
     font-family: sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     color: rgba(255,255,255,0.85);
     text-align: center;
   }
 
   /* ===== STATS CONTAINER (health, magic charge, power level) ===== */
   #stats-container {
-    width: 250px;
+    width: 212.5px;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 14px;
-    padding: 0 14px;
+    gap: 11.9px;
+    padding: 0 11.9px;
     box-sizing: border-box;
     flex-shrink: 0;
   }
@@ -235,18 +235,18 @@
   }
 
   .stat-label {
-    width: 80px;
+    width: 68px;
     font-family: sans-serif;
-    font-size: 11px;
+    font-size: 9.3px;
     color: rgba(255,255,255,0.7);
   }
 
   .stat-bar {
     flex: 1;
-    height: 12px;
+    height: 10.2px;
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 6px;
+    border-radius: 5px;
     overflow: hidden;
   }
 
@@ -262,7 +262,7 @@
 
   /* ===== HUD DIVIDER (between stats and currency) ===== */
   #hud-divider {
-    width: 1px;
+    width: 0.85px;
     height: 100%;
     background: rgba(255,255,255,0.15);
     flex-shrink: 0;
@@ -275,40 +275,40 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 10px;
-    padding: 0 14px;
+    gap: 8.5px;
+    padding: 0 11.9px;
     box-sizing: border-box;
   }
 
   .currency-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8.5px;
   }
 
   .currency-icon {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
+    width: 18.7px;
+    height: 18.7px;
+    border-radius: 5px;
     background: rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.2);
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 11.9px;
     line-height: 1;
   }
 
   .currency-value {
     font-family: sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     color: rgba(255,255,255,0.85);
   }
 
   .stat-value {
     font-family: sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     color: rgba(255,255,255,0.9);
   }
 </style>

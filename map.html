@@ -41,12 +41,13 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 84px;
-    height: 84px;
+    width: 128px;
+    height: 128px;
     transform: translate(-50%, -50%);
     object-fit: contain;
     pointer-events: none;
     z-index: 5;
+    transition: opacity 0.15s ease;
   }
 </style>
 </head>
@@ -116,7 +117,11 @@
           ? IDLE_SPRITE
           : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-      spriteEl.src = content;
+      if (typeof setSpriteSrcWithFade === 'function') {
+        setSpriteSrcWithFade(spriteEl, content);
+      } else {
+        spriteEl.src = content;
+      }
       spriteEl.style.transform = isFacingRight
         ? 'translate(-50%, -50%) scaleX(-1)'
         : 'translate(-50%, -50%) scaleX(1)';

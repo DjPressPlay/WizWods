@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Map</title>
+<title>Map Demo</title>
 <style>
   html, body {
     margin: 0;
@@ -105,6 +105,20 @@
     if (typeof player !== 'undefined' && spriteEl) {
       spriteEl.style.left = player.x + '%';
       spriteEl.style.top = player.y + '%';
+
+      const isFacingRight = player.direction === 'right';
+      const spriteDirection = isFacingRight ? 'left' : player.direction;
+
+      const content = player.effect
+        ? EFFECTS[player.effect][player.effectFrame]
+        : player.state === 'idle'
+          ? IDLE_SPRITE
+          : SPRITES[spriteDirection][player.state][player.frameIndex];
+
+      spriteEl.src = content;
+      spriteEl.style.transform = isFacingRight
+        ? 'translate(-50%, -50%) scaleX(-1)'
+        : 'translate(-50%, -50%) scaleX(1)';
     }
     requestAnimationFrame(updateMapPlayerPosition);
   }

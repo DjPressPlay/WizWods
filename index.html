@@ -497,6 +497,16 @@
 
   renderHud();
   renderPlayerIcon();
+
+  /* ===== HUD RESPONSIVE SCALE (shrinks with screen size, HUD's own file) ===== */
+  const hudContainerEl = document.getElementById('hud-container');
+  function scaleHud() {
+    const scale = Math.min(1, window.innerWidth / 600);
+    hudContainerEl.style.transformOrigin = 'top left';
+    hudContainerEl.style.transform = `scale(${scale})`;
+  }
+  scaleHud();
+  window.addEventListener('resize', scaleHud);
 </script>
 
 </body>

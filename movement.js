@@ -54,28 +54,36 @@ const MAX_RUN_SPEED = 0.6;  // percent per tick
 const ACCEL = 0.05;         // velocity ramp-up per tick
 const FRICTION = 0.08;      // velocity decay per tick when no input
 
-// Sets an <img>'s src with a quick fade-out/fade-in instead of an abrupt swap.
-// Skips the fade entirely if the src isn't actually changing.
-// Relies on the element's CSS having its own `transition: opacity ...` —
-// setting it here on every call would interrupt/reset the transition and
-// cause a hard flicker instead of a smooth fade.
-function setSpriteSrcWithFade(el, newSrc) {
-  if (!el) return;
-  if (el.dataset.currentSrc === newSrc) return;
+// True crossfade between two stacked <img> layers (baseId-a / baseId-b) inside
+// a wrapper element (id="baseId"). The new frame fades IN while the old frame
+// fades OUT at the same time, so there's never a moment where the sprite is
+// fully invisible (unlike a fade-out-then-swap-then-fade-in approach).
+function crossfadeSprite(baseId, newSrc, mirrored) {
+  const wrapper = document.getElementById(baseId);
+  if (!wrapper) return;
 
-  el.style.opacity = '0';
+  if (wrapper.dataset.currentSrc === newSrc && wrapper.dataset.mirrored === String(mirrored)) return;
 
-  setTimeout(() => {
-    el.src = newSrc;
-    el.dataset.currentSrc = newSrc;
-    el.style.opacity = '1';
-  }, 150);
+  const layerA = document.getElementById(baseId + '-a');
+  const layerB = document.getElementById(baseId + '-b');
+  const frontIsA = wrapper.dataset.front !== 'b';
+  const front = frontIsA ? layerA : layerB;
+  const back = frontIsA ? layerB : layerA;
+
+  back.src = newSrc;
+  back.style.transform = mirrored ? 'scaleX(-1)' : 'scaleX(1)';
+  back.style.opacity = '1';
+  front.style.opacity = '0';
+
+  wrapper.dataset.front = frontIsA ? 'b' : 'a';
+  wrapper.dataset.currentSrc = newSrc;
+  wrapper.dataset.mirrored = String(mirrored);
 }
 
 // Reads current player state and writes the matching sprite into the DOM.
 function renderPlayerIcon() {
-  const spriteEl = document.getElementById('player-icon-sprite');
-  if (!spriteEl) return;
+  const wrapperEl = document.getElementById('player-icon-sprite');
+  if (!wrapperEl) return;
 
   // 'right' has no sprite set of its own — it reuses 'left' and gets mirrored.
   const isFacingRight = player.direction === 'right';
@@ -87,9 +95,7 @@ function renderPlayerIcon() {
       ? IDLE_SPRITE
       : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-  setSpriteSrcWithFade(spriteEl, content);
-
-  spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
+  crossfadeSprite('player-icon-sprite', content, isFacingRight);
 }
 
 // ===== MOVEMENT INPUT =====

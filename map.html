@@ -44,9 +44,17 @@
     width: 84px;
     height: 84px;
     transform: translate(-50%, -50%);
-    object-fit: contain;
     pointer-events: none;
     z-index: 5;
+  }
+
+  #map-player-sprite .sprite-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     transition: opacity 0.15s ease;
   }
 </style>
@@ -55,7 +63,10 @@
 
 <div id="map-container">
   <div id="map-stage">
-    <img id="map-player-sprite" alt="player">
+    <div id="map-player-sprite">
+      <img id="map-player-sprite-a" class="sprite-layer" alt="player">
+      <img id="map-player-sprite-b" class="sprite-layer" alt="player" style="opacity:0;">
+    </div>
   </div>
 </div>
 
@@ -100,13 +111,13 @@
   }
 
   loadHud();
-  document.getElementById('map-player-sprite').src = 'assets/player/idle.png';
+  document.getElementById('map-player-sprite-a').src = 'assets/player/idle.png';
 
   function updateMapPlayerPosition() {
-    const spriteEl = document.getElementById('map-player-sprite');
-    if (typeof player !== 'undefined' && spriteEl) {
-      spriteEl.style.left = player.x + '%';
-      spriteEl.style.top = player.y + '%';
+    const wrapperEl = document.getElementById('map-player-sprite');
+    if (typeof player !== 'undefined' && wrapperEl) {
+      wrapperEl.style.left = player.x + '%';
+      wrapperEl.style.top = player.y + '%';
 
       const isFacingRight = player.direction === 'right';
       const spriteDirection = isFacingRight ? 'left' : player.direction;
@@ -117,14 +128,9 @@
           ? IDLE_SPRITE
           : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-      if (typeof setSpriteSrcWithFade === 'function') {
-        setSpriteSrcWithFade(spriteEl, content);
-      } else {
-        spriteEl.src = content;
+      if (typeof crossfadeSprite === 'function') {
+        crossfadeSprite('map-player-sprite', content, isFacingRight);
       }
-      spriteEl.style.transform = isFacingRight
-        ? 'translate(-50%, -50%) scaleX(-1)'
-        : 'translate(-50%, -50%) scaleX(1)';
     }
     requestAnimationFrame(updateMapPlayerPosition);
   }

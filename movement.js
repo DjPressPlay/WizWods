@@ -42,7 +42,13 @@ const player = {
 
   effect: null,       // null | 'atk' | 'get_dmg'
   effectFrame: 0,
+
+  x: 50, // percent of map width
+  y: 50, // percent of map height
 };
+
+const WALK_SPEED = 0.3; // percent per tick
+const RUN_SPEED = 0.6;  // percent per tick
 
 // Reads current player state and writes the matching sprite into the DOM.
 function renderPlayerIcon() {
@@ -131,11 +137,19 @@ document.addEventListener('keyup', (e) => {
   if (direction) handleMoveKeyUp(direction);
 });
 
-// tick down every key's double-tap cooldown
+// tick down every key's double-tap cooldown, and move the player position
 setInterval(() => {
   for (const direction in moveKeys) {
     const key = moveKeys[direction];
     if (key.cooldown > 0) key.cooldown--;
+  }
+
+  if (player.state === 'walk' || player.state === 'run') {
+    const speed = player.state === 'run' ? RUN_SPEED : WALK_SPEED;
+    if (player.direction === 'up') player.y -= speed;
+    if (player.direction === 'down') player.y += speed;
+    if (player.direction === 'left') player.x -= speed;
+    if (player.direction === 'right') player.x += speed;
   }
 }, TICK_MS);
 

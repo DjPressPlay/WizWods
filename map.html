@@ -57,6 +57,54 @@
     object-fit: contain;
     transition: opacity 0.15s ease;
   }
+
+  /* ===== INTERACTION OVERLAY ===== */
+  #interaction-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #interaction-overlay-panel {
+    background: #14201c;
+    border: 2px solid #3fd6c2;
+    border-radius: 10px;
+    box-shadow: 0 0 24px rgba(63, 214, 194, 0.5);
+    color: #eafffa;
+    width: min(80%, 360px);
+    padding: 20px;
+    font-family: sans-serif;
+    text-align: center;
+  }
+
+  #interaction-overlay-title {
+    margin: 0 0 12px 0;
+    font-size: 1.2rem;
+    color: #3fd6c2;
+  }
+
+  #interaction-overlay-body {
+    margin: 0 0 18px 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  #interaction-overlay-close {
+    background: #3fd6c2;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    color: #0b1512;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -69,6 +117,16 @@
     </div>
   </div>
 </div>
+
+<div id="interaction-overlay">
+  <div id="interaction-overlay-panel">
+    <h2 id="interaction-overlay-title"></h2>
+    <p id="interaction-overlay-body"></p>
+    <button id="interaction-overlay-close">Close</button>
+  </div>
+</div>
+
+<script src="zones.js"></script>
 
 <script>
   async function loadHud() {
@@ -116,6 +174,9 @@
   function updateMapPlayerPosition() {
     const wrapperEl = document.getElementById('map-player-sprite');
     if (typeof player !== 'undefined' && wrapperEl) {
+      if (typeof clampToPlayArea === 'function') clampToPlayArea();
+      if (typeof checkZoneTrigger === 'function') checkZoneTrigger();
+
       wrapperEl.style.left = player.x + '%';
       wrapperEl.style.top = player.y + '%';
 

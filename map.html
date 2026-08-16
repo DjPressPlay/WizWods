@@ -30,7 +30,7 @@
     height: 100%;
     aspect-ratio: 1024 / 1536;
     max-width: 100%;
-    margin-top: 5%;
+    margin-top: 8%;
     background-image: url('assets/map/map_bg.png');
     background-size: cover;
     background-position: center;
@@ -80,6 +80,17 @@
       scriptEl.textContent = src.textContent;
       document.body.appendChild(scriptEl);
     });
+
+    // scale the whole HUD box as one unit based on viewport width,
+    // without touching any of its internal fixed-px layout
+    const hudContainer = document.getElementById('hud-container');
+    function scaleHud() {
+      const scale = Math.max(0.5, Math.min(1, window.innerWidth / 600));
+      hudContainer.style.transformOrigin = 'top left';
+      hudContainer.style.transform = `scale(${scale})`;
+    }
+    scaleHud();
+    window.addEventListener('resize', scaleHud);
   }
 
   loadHud();

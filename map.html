@@ -65,10 +65,6 @@
     gamePage.style.left = '0';
     document.body.appendChild(gamePage);
 
-    const hudContainer = document.getElementById('hud-container');
-    hudContainer.style.transformOrigin = 'top left';
-    hudContainer.style.transform = 'scale(0.95) translateX(5%)';
-
     // load movement.js the normal way
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');

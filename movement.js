@@ -54,6 +54,22 @@ const MAX_RUN_SPEED = 0.6;  // percent per tick
 const ACCEL = 0.05;         // velocity ramp-up per tick
 const FRICTION = 0.08;      // velocity decay per tick when no input
 
+// Sets an <img>'s src with a quick fade-out/fade-in instead of an abrupt swap.
+// Skips the fade entirely if the src isn't actually changing.
+function setSpriteSrcWithFade(el, newSrc) {
+  if (!el) return;
+  if (el.dataset.currentSrc === newSrc) return;
+
+  el.style.transition = 'opacity 100ms ease';
+  el.style.opacity = '0';
+
+  setTimeout(() => {
+    el.src = newSrc;
+    el.dataset.currentSrc = newSrc;
+    el.style.opacity = '1';
+  }, 100);
+}
+
 // Reads current player state and writes the matching sprite into the DOM.
 function renderPlayerIcon() {
   const spriteEl = document.getElementById('player-icon-sprite');
@@ -69,7 +85,7 @@ function renderPlayerIcon() {
       ? IDLE_SPRITE
       : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-  spriteEl.src = content;
+  setSpriteSrcWithFade(spriteEl, content);
 
   spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
 }

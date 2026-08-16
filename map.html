@@ -12,6 +12,7 @@
     height: 100%;
     background: #000;
   }
+
   /* ===== MAP CONTAINER ===== */
   /* Fixed aspect ratio matching the source image (1024 x 1536, portrait 2:3) */
   #map-container {
@@ -19,14 +20,16 @@
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
   }
+
   #map-stage {
     position: relative;
     height: 100%;
     aspect-ratio: 1024 / 1536;
     max-width: 100%;
+    margin-top: 8%;
     background-image: url('assets/map/map_bg.png');
     background-size: cover;
     background-position: center;
@@ -34,14 +37,17 @@
 </style>
 </head>
 <body>
+
 <div id="map-container">
   <div id="map-stage"></div>
 </div>
+
 <script>
   async function loadHud() {
     const res = await fetch('index.html');
     const html = await res.text();
     const doc = new DOMParser().parseFromString(html, 'text/html');
+
     // pull index.html's <style> block into this page
     const sourceStyle = doc.querySelector('style');
     if (sourceStyle) {
@@ -49,6 +55,7 @@
       styleEl.textContent = sourceStyle.textContent;
       document.head.appendChild(styleEl);
     }
+
     // pull index.html's #game-page (HUD + controller + special button) and
     // overlay it on top of the map stage instead of the blank body it uses in index.html
     const gamePage = doc.getElementById('game-page');
@@ -56,6 +63,7 @@
     gamePage.style.top = '0';
     gamePage.style.left = '0';
     document.getElementById('map-stage').appendChild(gamePage);
+
     // load movement.js the normal way
     await new Promise((resolve, reject) => {
       const s = document.createElement('script');
@@ -64,6 +72,7 @@
       s.onerror = reject;
       document.body.appendChild(s);
     });
+
     // run index.html's inline <script> (hudState, renderHud, event wiring, etc.)
     doc.querySelectorAll('script:not([src])').forEach((src) => {
       const scriptEl = document.createElement('script');
@@ -71,7 +80,9 @@
       document.body.appendChild(scriptEl);
     });
   }
+
   loadHud();
 </script>
+
 </body>
 </html>

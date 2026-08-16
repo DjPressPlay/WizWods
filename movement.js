@@ -56,18 +56,20 @@ const FRICTION = 0.08;      // velocity decay per tick when no input
 
 // Sets an <img>'s src with a quick fade-out/fade-in instead of an abrupt swap.
 // Skips the fade entirely if the src isn't actually changing.
+// Relies on the element's CSS having its own `transition: opacity ...` —
+// setting it here on every call would interrupt/reset the transition and
+// cause a hard flicker instead of a smooth fade.
 function setSpriteSrcWithFade(el, newSrc) {
   if (!el) return;
   if (el.dataset.currentSrc === newSrc) return;
 
-  el.style.transition = 'opacity 100ms ease';
   el.style.opacity = '0';
 
   setTimeout(() => {
     el.src = newSrc;
     el.dataset.currentSrc = newSrc;
     el.style.opacity = '1';
-  }, 100);
+  }, 150);
 }
 
 // Reads current player state and writes the matching sprite into the DOM.

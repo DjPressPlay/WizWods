@@ -150,6 +150,13 @@
     pointer-events: none;
   }
 
+  #demon-girl-sprite {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
   /* ===== PLAYER ICON CONTAINER (clickable, opens message dropdown) ===== */
   #player-icon-container {
     width: 130px;
@@ -314,7 +321,9 @@
   <div id="hud-container">
 
     <!-- ===== DEMON GIRL IMAGE CONTAINER ===== -->
-    <div id="demon-girl-container"></div>
+    <div id="demon-girl-container">
+      <img id="demon-girl-sprite" alt="">
+    </div>
 
     <!-- ===== PLAYER ICON CONTAINER (click to toggle message dropdown) ===== -->
     <div id="player-icon-container" onclick="toggleMessageDropdown()">

@@ -62,7 +62,7 @@
     gamePage.style.position = 'absolute';
     gamePage.style.top = '0';
     gamePage.style.left = '0';
-    document.getElementById('map-stage').appendChild(gamePage);
+    document.body.appendChild(gamePage);
 
     // load movement.js the normal way
     await new Promise((resolve, reject) => {

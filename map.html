@@ -41,8 +41,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 84px;
-    height: 84px;
+    width: 128px;
+    height: 128px;
     transform: translate(-50%, -50%);
     object-fit: contain;
     pointer-events: none;
@@ -78,6 +78,7 @@
     gamePage.style.position = 'absolute';
     gamePage.style.top = '0';
     gamePage.style.left = '0';
+    gamePage.style.zIndex = '50';
     document.body.appendChild(gamePage);
 
     // load movement.js the normal way

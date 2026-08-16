@@ -30,7 +30,7 @@
     height: 100%;
     aspect-ratio: 1024 / 1536;
     max-width: 100%;
-    margin-top: 5%;
+    margin-top: 8%;
     background-image: url('assets/map/map_bg.png');
     background-size: cover;
     background-position: center;
@@ -62,8 +62,12 @@
     const gamePage = doc.getElementById('game-page');
     gamePage.style.position = 'absolute';
     gamePage.style.top = '0';
-    gamePage.style.left = '0';
+    gamePage.style.left = '93px';
     document.body.appendChild(gamePage);
+
+    const hudContainer = document.getElementById('hud-container');
+    hudContainer.style.transformOrigin = 'top left';
+    hudContainer.style.transform = 'scale(0.95) translateX(5%)';
 
     // load movement.js the normal way
     await new Promise((resolve, reject) => {

@@ -46,9 +46,6 @@ const player = {
 
 // Reads current player state and writes the matching sprite into the DOM.
 function renderPlayerIcon() {
-  const spriteEl = document.getElementById('player-icon-sprite');
-  if (!spriteEl) return;
-
   // 'right' has no sprite set of its own — it reuses 'left' and gets mirrored.
   const isFacingRight = player.direction === 'right';
   const spriteDirection = isFacingRight ? 'left' : player.direction;
@@ -59,11 +56,14 @@ function renderPlayerIcon() {
       ? IDLE_SPRITE
       : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-  spriteEl.src = content;
+  // HUD icon (index.html)
+  const spriteEl = document.getElementById('player-icon-sprite');
+  if (spriteEl) {
+    spriteEl.src = content;
+    spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
+  }
 
-  spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
-
-  // also update the on-map player sprite, if present (map.html)
+  // on-map player sprite (map.html)
   const mapSpriteEl = document.getElementById('map-player-sprite');
   if (mapSpriteEl) {
     mapSpriteEl.src = content;

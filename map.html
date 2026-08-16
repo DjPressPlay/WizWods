@@ -80,17 +80,6 @@
       scriptEl.textContent = src.textContent;
       document.body.appendChild(scriptEl);
     });
-
-    // scale the whole HUD box as one unit based on viewport width,
-    // without touching any of its internal fixed-px layout
-    const hudContainer = document.getElementById('hud-container');
-    function scaleHud() {
-      const scale = window.innerWidth / 600;
-      hudContainer.style.transformOrigin = 'top left';
-      hudContainer.style.transform = `scale(${scale})`;
-    }
-    scaleHud();
-    window.addEventListener('resize', scaleHud);
   }
 
   loadHud();

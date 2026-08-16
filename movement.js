@@ -62,6 +62,13 @@ function renderPlayerIcon() {
   spriteEl.src = content;
 
   spriteEl.style.transform = isFacingRight ? 'scaleX(-1)' : 'scaleX(1)';
+
+  // also update the on-map player sprite, if present (map.html)
+  const mapSpriteEl = document.getElementById('map-player-sprite');
+  if (mapSpriteEl) {
+    mapSpriteEl.src = content;
+    mapSpriteEl.style.transform = isFacingRight ? 'translate(-50%, -50%) scaleX(-1)' : 'translate(-50%, -50%) scaleX(1)';
+  }
 }
 
 // ===== MOVEMENT INPUT =====

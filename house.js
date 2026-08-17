@@ -23,11 +23,9 @@ function renderHouseStart() {
 
 renderHouseStart();
 
-// Computes HouseStart's collision as a circle (ellipse in percent-space,
-// since x and y scale differently in percent-of-map units), centered on
-// the house. The top 25% of the house's height stays fully passable —
-// below that cutoff line, collision is a true circular area instead of
-// a rectangle.
+// Computes HouseStart's collision as a true circle (ellipse in percent-
+// space, since x and y scale differently in percent-of-map units),
+// centered on the house — matching the round shape of the house art.
 function getHouseCollisionCircle() {
   const stageEl = document.getElementById('map-stage');
   if (!stageEl) return null;
@@ -38,16 +36,11 @@ function getHouseCollisionCircle() {
   const radiusXPercent = (HouseStart.width / 2 / rect.width) * 100;
   const radiusYPercent = (HouseStart.height / 2 / rect.height) * 100;
 
-  const top = HouseStart.y - radiusYPercent;
-  const bottom = HouseStart.y + radiusYPercent;
-  const passableTopY = top + (bottom - top) * 0.25; // skip the top 25%
-
   return {
     cx: HouseStart.x,
     cy: HouseStart.y,
     radiusXPercent,
     radiusYPercent,
-    passableTopY,
   };
 }
 
@@ -58,8 +51,6 @@ function getHouseCollisionCircle() {
 function blockHouseCollision(prevX, prevY) {
   const circle = getHouseCollisionCircle();
   if (!circle) return;
-
-  if (player.y < circle.passableTopY) return; // top strip stays passable
 
   const dx = (player.x - circle.cx) / circle.radiusXPercent;
   const dy = (player.y - circle.cy) / circle.radiusYPercent;

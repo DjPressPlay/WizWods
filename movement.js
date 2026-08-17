@@ -44,7 +44,7 @@ const player = {
   effectFrame: 0,
 
   x: 50, // percent of map width
-  y: 50, // percent of map height
+  y: 72, // percent of map height — kept clear of HouseStart's collision box
   vx: 0, // current velocity, percent per tick
   vy: 0,
 };
@@ -87,48 +87,6 @@ function clampToPlayArea() {
   if (player.x > b.x + b.w)   { player.x = b.x + b.w;    player.vx = 0; }
   if (player.y < b.y)         { player.y = b.y;          player.vy = 0; }
   if (player.y > b.y + b.h)   { player.y = b.y + b.h;    player.vy = 0; }
-}
-
-// Computes HouseStart's collision box in percent-of-map coordinates.
-// Only the bottom 85% of the house blocks the player — the top 15% is
-// left passable so the player can walk through that strip and appear
-// behind the house.
-function getHouseCollisionBoxPercent() {
-  if (typeof HouseStart === 'undefined') return null;
-  const stageEl = document.getElementById('map-stage');
-  if (!stageEl) return null;
-
-  const rect = stageEl.getBoundingClientRect();
-  if (!rect.width || !rect.height) return null;
-
-  const halfWidthPercent = (HouseStart.width / 2 / rect.width) * 100;
-  const halfHeightPercent = (HouseStart.height / 2 / rect.height) * 100;
-
-  const left = HouseStart.x - halfWidthPercent;
-  const right = HouseStart.x + halfWidthPercent;
-  const top = HouseStart.y - halfHeightPercent;
-  const bottom = HouseStart.y + halfHeightPercent;
-
-  const collisionTop = top + (bottom - top) * 0.15; // skip the top 15%
-
-  return { left, right, top: collisionTop, bottom };
-}
-
-// Blocks the player from entering HouseStart's collision box. If the
-// tick's movement would land inside it, that movement is cancelled.
-function blockHouseCollision(prevX, prevY) {
-  const box = getHouseCollisionBoxPercent();
-  if (!box) return;
-
-  const insideX = player.x > box.left && player.x < box.right;
-  const insideY = player.y > box.top && player.y < box.bottom;
-
-  if (insideX && insideY) {
-    player.x = prevX;
-    player.y = prevY;
-    player.vx = 0;
-    player.vy = 0;
-  }
 }
 
 // Checks how close the player is to playArea's top/bottom edge and sets

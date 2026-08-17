@@ -7,8 +7,8 @@ const HouseStart = {
   x: 48.45, // percent — center of playArea
   y: 44,    // percent — moved up from playArea center
   sprite: 'assets/house/HouseStart.png',
-  width: 132,  // px — must match #HouseStart CSS width
-  height: 132, // px — must match #HouseStart CSS height
+  width: 195,  // px — must match #HouseStart CSS width
+  height: 195, // px — must match #HouseStart CSS height
 };
 
 function renderHouseStart() {
@@ -23,42 +23,49 @@ function renderHouseStart() {
 
 renderHouseStart();
 
-// Computes HouseStart's collision box in percent-of-map coordinates.
-// Only the bottom 75% of the house blocks the player — the top 25% is
-// left passable so the player can walk through that strip and appear
-// behind the house.
-function getHouseCollisionBoxPercent() {
+// Computes HouseStart's collision as a circle (ellipse in percent-space,
+// since x and y scale differently in percent-of-map units), centered on
+// the house. The top 25% of the house's height stays fully passable —
+// below that cutoff line, collision is a true circular area instead of
+// a rectangle.
+function getHouseCollisionCircle() {
   const stageEl = document.getElementById('map-stage');
   if (!stageEl) return null;
 
   const rect = stageEl.getBoundingClientRect();
   if (!rect.width || !rect.height) return null;
 
-  const halfWidthPercent = (HouseStart.width / 2 / rect.width) * 100;
-  const halfHeightPercent = (HouseStart.height / 2 / rect.height) * 100;
+  const radiusXPercent = (HouseStart.width / 2 / rect.width) * 100;
+  const radiusYPercent = (HouseStart.height / 2 / rect.height) * 100;
 
-  const left = HouseStart.x - halfWidthPercent;
-  const right = HouseStart.x + halfWidthPercent;
-  const top = HouseStart.y - halfHeightPercent;
-  const bottom = HouseStart.y + halfHeightPercent;
+  const top = HouseStart.y - radiusYPercent;
+  const bottom = HouseStart.y + radiusYPercent;
+  const passableTopY = top + (bottom - top) * 0.25; // skip the top 25%
 
-  const collisionTop = top + (bottom - top) * 0.25; // skip the top 25%
-
-  return { left, right, top: collisionTop, bottom };
+  return {
+    cx: HouseStart.x,
+    cy: HouseStart.y,
+    radiusXPercent,
+    radiusYPercent,
+    passableTopY,
+  };
 }
 
-// Blocks the player from entering HouseStart's collision box. Called from
-// movement.js's tick (that's where player position/prevX/prevY live). If
-// the tick's movement would land inside the box, that movement is
-// cancelled.
+// Blocks the player from entering HouseStart's circular collision area.
+// Called from movement.js's tick (that's where player position/prevX/
+// prevY live). If the tick's movement would land inside the circle,
+// that movement is cancelled.
 function blockHouseCollision(prevX, prevY) {
-  const box = getHouseCollisionBoxPercent();
-  if (!box) return;
+  const circle = getHouseCollisionCircle();
+  if (!circle) return;
 
-  const insideX = player.x > box.left && player.x < box.right;
-  const insideY = player.y > box.top && player.y < box.bottom;
+  if (player.y < circle.passableTopY) return; // top strip stays passable
 
-  if (insideX && insideY) {
+  const dx = (player.x - circle.cx) / circle.radiusXPercent;
+  const dy = (player.y - circle.cy) / circle.radiusYPercent;
+  const inside = (dx * dx + dy * dy) <= 1;
+
+  if (inside) {
     player.x = prevX;
     player.y = prevY;
     player.vx = 0;

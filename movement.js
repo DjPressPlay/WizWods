@@ -66,6 +66,11 @@ const ZONES = {
   crystalGate: { x: 3.7,  y: 75.1, w: 92.6, h: 21.3 },
 };
 
+const ZONE_INFO = {
+  portalZone:  { name: 'Summoner', description: 'Summon Help' },
+  crystalGate: { name: 'School',   description: 'Learn new Spells' },
+};
+
 const ZONE_PROXIMITY_THRESHOLD = 3; // percent of map height — how close to playArea's edge counts as "near" a zone
 const INTERACT_KEY = 'e';
 
@@ -110,8 +115,21 @@ function checkZoneProximity() {
 // zone, and also hidden while the game is frozen (overlay is up instead).
 function updateZonePrompt() {
   const promptEl = document.getElementById('zone-prompt');
-  if (!promptEl) return;
-  promptEl.style.display = (activeZone && !gameFrozen) ? 'block' : 'none';
+  const labelEl = document.getElementById('zone-label');
+  const show = activeZone && !gameFrozen;
+
+  if (promptEl) promptEl.style.display = show ? 'block' : 'none';
+
+  if (labelEl) {
+    if (show) {
+      const info = ZONE_INFO[activeZone];
+      document.getElementById('zone-label-name').textContent = info.name;
+      document.getElementById('zone-label-desc').textContent = info.description;
+      labelEl.style.display = 'block';
+    } else {
+      labelEl.style.display = 'none';
+    }
+  }
 }
 
 // The single entry point for the interact key. Behavior depends on

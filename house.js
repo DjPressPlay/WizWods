@@ -23,8 +23,8 @@ renderHouseStart();
 // Computes HouseStart's collision box in percent-of-map coordinates.
 // Size comes directly from the actual rendered #HouseStart element —
 // not a separate hardcoded number — so it's always relative to whatever
-// size is really on screen, no manual syncing needed. Top 80% of the
-// box is passable — only the bottom 20% blocks the player.
+// size is really on screen, no manual syncing needed. Top 20% of the
+// box is passable — the bottom 80% blocks the player.
 function getHouseCollisionBoxPercent() {
   const stageEl = document.getElementById('map-stage');
   const houseEl = document.getElementById('HouseStart');

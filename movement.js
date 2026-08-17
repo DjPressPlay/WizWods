@@ -49,12 +49,107 @@ const player = {
   vy: 0,
 };
 
-let gamePaused = false; // set true by zones.js while an interaction overlay is open
-
 const MAX_WALK_SPEED = 0.3; // percent per tick
 const MAX_RUN_SPEED = 0.6;  // percent per tick
 const ACCEL = 0.05;         // velocity ramp-up per tick
 const FRICTION = 0.08;      // velocity decay per tick when no input
+
+// ===== MAP ZONES =====
+// Rectangles in percent-of-map coordinates (matches player.x / player.y).
+// playArea is the only zone with collision — it's what the player is
+// physically boxed inside. portalZone / crystalGate sit just outside
+// playArea's edges and are never entered directly; they're triggered by
+// proximity to the shared boundary line instead.
+const ZONES = {
+  playArea:    { x: 14.5, y: 26.8, w: 67.9, h: 47.8 },
+  portalZone:  { x: 2.4,  y: 1.2,  w: 94.6, h: 24.7 },
+  crystalGate: { x: 3.7,  y: 75.1, w: 92.6, h: 21.3 },
+};
+
+const ZONE_PROXIMITY_THRESHOLD = 3; // percent of map height — how close to playArea's edge counts as "near" a zone
+const INTERACT_KEY = 'e';
+
+let gameFrozen = false;
+let activeZone = null;   // null | 'portalZone' | 'crystalGate' — which interaction zone the player is currently near
+let overlayOpen = false;
+
+// Clamps the player inside playArea's bounds. This is the only collision
+// in the game — portalZone / crystalGate never get collision because the
+// player is never meant to be able to stand inside them.
+function clampToPlayArea() {
+  const b = ZONES.playArea;
+  if (player.x < b.x)         { player.x = b.x;         player.vx = 0; }
+  if (player.x > b.x + b.w)   { player.x = b.x + b.w;    player.vx = 0; }
+  if (player.y < b.y)         { player.y = b.y;          player.vy = 0; }
+  if (player.y > b.y + b.h)   { player.y = b.y + b.h;    player.vy = 0; }
+}
+
+// Checks how close the player is to playArea's top/bottom edge and sets
+// activeZone accordingly. Since playArea, portalZone, and crystalGate are
+// stacked horizontal bands, this only needs to compare player.y against
+// the shared boundary lines — no rect-overlap test needed.
+function checkZoneProximity() {
+  const b = ZONES.playArea;
+  const distToTop = player.y - b.y;
+  const distToBottom = (b.y + b.h) - player.y;
+
+  let nearZone = null;
+  if (distToTop <= ZONE_PROXIMITY_THRESHOLD) {
+    nearZone = 'portalZone';
+  } else if (distToBottom <= ZONE_PROXIMITY_THRESHOLD) {
+    nearZone = 'crystalGate';
+  }
+
+  if (nearZone !== activeZone) {
+    activeZone = nearZone;
+    updateZonePrompt();
+  }
+}
+
+// Shows/hides the "press key" prompt. Hidden whenever there's no active
+// zone, and also hidden while the game is frozen (overlay is up instead).
+function updateZonePrompt() {
+  const promptEl = document.getElementById('zone-prompt');
+  if (!promptEl) return;
+  promptEl.style.display = (activeZone && !gameFrozen) ? 'block' : 'none';
+}
+
+// The single entry point for the interact key. Behavior depends on
+// whether the game is currently frozen (overlay open = key closes it)
+// or not (must be near a zone for the key to do anything).
+function handleInteractPress() {
+  if (gameFrozen) {
+    closeZoneOverlay();
+    return;
+  }
+  if (activeZone) {
+    openZoneOverlay(activeZone);
+  }
+}
+
+function openZoneOverlay(zoneId) {
+  gameFrozen = true;
+  overlayOpen = true;
+  updateZonePrompt();
+
+  const overlayEl = document.getElementById('zone-overlay');
+  const titleEl = document.getElementById('zone-overlay-title');
+  if (overlayEl) {
+    if (titleEl) titleEl.textContent = zoneId === 'portalZone' ? 'Portal' : 'Crystal Gate';
+    overlayEl.style.display = 'flex';
+  }
+}
+
+function closeZoneOverlay() {
+  gameFrozen = false;
+  overlayOpen = false;
+
+  const overlayEl = document.getElementById('zone-overlay');
+  if (overlayEl) overlayEl.style.display = 'none';
+
+  checkZoneProximity();
+  updateZonePrompt();
+}
 
 // True crossfade between two stacked <img> layers (baseId-a / baseId-b) inside
 // a wrapper element (id="baseId"). The new frame fades IN while the old frame
@@ -176,18 +271,24 @@ function updateMovementState() {
 }
 
 document.addEventListener('keydown', (e) => {
+  if (e.key.toLowerCase() === INTERACT_KEY) {
+    handleInteractPress();
+    return;
+  }
+  if (gameFrozen) return;
   const direction = keyToDirection[e.key];
   if (direction) handleMoveKeyDown(direction);
 });
 
 document.addEventListener('keyup', (e) => {
+  if (gameFrozen) return;
   const direction = keyToDirection[e.key];
   if (direction) handleMoveKeyUp(direction);
 });
 
 // tick down every key's double-tap cooldown, and move the player position
 setInterval(() => {
-  if (gamePaused) return;
+  if (gameFrozen) return;
 
   for (const direction in moveKeys) {
     const key = moveKeys[direction];
@@ -220,6 +321,9 @@ setInterval(() => {
 
   player.x += player.vx;
   player.y += player.vy;
+
+  clampToPlayArea();
+  checkZoneProximity();
 }, TICK_MS);
 
 // ===== SPECIAL BUTTON → ATTACK =====
@@ -228,12 +332,14 @@ const specialAttackButtonEl = document.getElementById('special-button');
 
 if (specialAttackButtonEl) {
   const startAttack = () => {
+    if (gameFrozen) return;
     player.effect = 'atk';
     player.effectFrame = 0;
     renderPlayerIcon();
   };
 
   const stopAttack = () => {
+    if (gameFrozen) return;
     player.effect = null;
     renderPlayerIcon();
   };

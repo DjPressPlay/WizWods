@@ -58,7 +58,7 @@
     transition: opacity 0.15s ease;
   }
 
-  /* ===== ZONE INTERACTION PROMPT ===== */
+  /* ===== ZONE INTERACTION PROMPT — floating magic rune button ===== */
   #zone-prompt {
     display: none;
     position: absolute;
@@ -66,15 +66,86 @@
     bottom: 15%;
     transform: translateX(-50%);
     z-index: 40;
-    padding: 6px 14px;
-    background: rgba(0, 0, 0, 0.65);
-    border: 1px solid rgba(120, 230, 220, 0.8);
-    border-radius: 20px;
-    color: #d9fffb;
+    width: 76px;
+    height: 76px;
+    cursor: pointer;
+    animation: zone-prompt-float 2.6s ease-in-out infinite;
+  }
+
+  #zone-prompt .rune-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(120, 230, 220, 0.9),
+      rgba(180, 140, 255, 0.7),
+      rgba(120, 230, 220, 0.9)
+    );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+    animation: zone-prompt-spin 4s linear infinite;
+  }
+
+  #zone-prompt .rune-core {
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, rgba(30, 60, 58, 0.95), rgba(6, 14, 13, 0.97));
+    box-shadow:
+      0 0 10px rgba(120, 230, 220, 0.55),
+      0 0 22px rgba(120, 230, 220, 0.35),
+      inset 0 0 12px rgba(120, 230, 220, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: zone-prompt-pulse 2.2s ease-in-out infinite;
+    transition: box-shadow 0.25s ease, background 0.25s ease;
+  }
+
+  #zone-prompt .rune-label {
     font-family: sans-serif;
-    font-size: 13px;
+    font-weight: bold;
+    font-size: 11px;
     letter-spacing: 0.5px;
+    color: #d9fffb;
+    text-shadow: 0 0 6px rgba(120, 230, 220, 0.8);
     pointer-events: none;
+  }
+
+  #zone-prompt:hover {
+    animation-play-state: running;
+  }
+
+  #zone-prompt:hover .rune-ring {
+    animation-duration: 1.4s;
+  }
+
+  #zone-prompt:hover .rune-core {
+    box-shadow:
+      0 0 16px rgba(120, 230, 220, 0.85),
+      0 0 34px rgba(180, 140, 255, 0.55),
+      inset 0 0 16px rgba(120, 230, 220, 0.4);
+  }
+
+  #zone-prompt:active .rune-core {
+    box-shadow:
+      0 0 8px rgba(120, 230, 220, 0.9),
+      inset 0 0 10px rgba(120, 230, 220, 0.5);
+  }
+
+  @keyframes zone-prompt-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-10px); }
+  }
+
+  @keyframes zone-prompt-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes zone-prompt-pulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
   }
 
   /* ===== ZONE OVERLAY ===== */
@@ -135,7 +206,10 @@
       <img id="map-player-sprite-b" class="sprite-layer" alt="player" style="opacity:0;">
     </div>
 
-    <div id="zone-prompt">Press E</div>
+    <div id="zone-prompt" onclick="handleInteractPress()">
+      <div class="rune-ring"></div>
+      <div class="rune-core"><span class="rune-label">E</span></div>
+    </div>
   </div>
 </div>
 

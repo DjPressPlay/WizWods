@@ -7,8 +7,8 @@ const HouseStart = {
   x: 48.45, // percent — center of playArea
   y: 44,    // percent — moved up from playArea center
   sprite: 'assets/house/HouseStart.png',
-  width: 190,  // px — must match #HouseStart CSS width
-  height: 190, // px — must match #HouseStart CSS height
+  width: 130,  // px — must match #HouseStart CSS width
+  height: 130, // px — must match #HouseStart CSS height
 };
 
 function renderHouseStart() {

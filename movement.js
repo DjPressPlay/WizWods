@@ -78,15 +78,57 @@ let gameFrozen = false;
 let activeZone = null;   // null | 'portalZone' | 'crystalGate' — which interaction zone the player is currently near
 let overlayOpen = false;
 
-// Clamps the player inside playArea's bounds. This is the only collision
-// in the game — portalZone / crystalGate never get collision because the
-// player is never meant to be able to stand inside them.
+// Clamps the player inside playArea's bounds. This is the only boundary
+// collision in the game — portalZone / crystalGate never get collision
+// because the player is never meant to be able to stand inside them.
 function clampToPlayArea() {
   const b = ZONES.playArea;
   if (player.x < b.x)         { player.x = b.x;         player.vx = 0; }
   if (player.x > b.x + b.w)   { player.x = b.x + b.w;    player.vx = 0; }
   if (player.y < b.y)         { player.y = b.y;          player.vy = 0; }
   if (player.y > b.y + b.h)   { player.y = b.y + b.h;    player.vy = 0; }
+}
+
+// Computes HouseStart's collision box in percent-of-map coordinates.
+// Only the bottom 85% of the house blocks the player — the top 15% is
+// left passable so the player can walk through that strip and appear
+// behind the house.
+function getHouseCollisionBoxPercent() {
+  if (typeof HouseStart === 'undefined') return null;
+  const stageEl = document.getElementById('map-stage');
+  if (!stageEl) return null;
+
+  const rect = stageEl.getBoundingClientRect();
+  if (!rect.width || !rect.height) return null;
+
+  const halfWidthPercent = (HouseStart.width / 2 / rect.width) * 100;
+  const halfHeightPercent = (HouseStart.height / 2 / rect.height) * 100;
+
+  const left = HouseStart.x - halfWidthPercent;
+  const right = HouseStart.x + halfWidthPercent;
+  const top = HouseStart.y - halfHeightPercent;
+  const bottom = HouseStart.y + halfHeightPercent;
+
+  const collisionTop = top + (bottom - top) * 0.15; // skip the top 15%
+
+  return { left, right, top: collisionTop, bottom };
+}
+
+// Blocks the player from entering HouseStart's collision box. If the
+// tick's movement would land inside it, that movement is cancelled.
+function blockHouseCollision(prevX, prevY) {
+  const box = getHouseCollisionBoxPercent();
+  if (!box) return;
+
+  const insideX = player.x > box.left && player.x < box.right;
+  const insideY = player.y > box.top && player.y < box.bottom;
+
+  if (insideX && insideY) {
+    player.x = prevX;
+    player.y = prevY;
+    player.vx = 0;
+    player.vy = 0;
+  }
 }
 
 // Checks how close the player is to playArea's top/bottom edge and sets
@@ -337,10 +379,13 @@ setInterval(() => {
     player.vy += (0 - player.vy) * FRICTION;
   }
 
+  const prevX = player.x;
+  const prevY = player.y;
   player.x += player.vx;
   player.y += player.vy;
 
   clampToPlayArea();
+  blockHouseCollision(prevX, prevY);
   checkZoneProximity();
 }, TICK_MS);
 

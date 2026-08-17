@@ -5,7 +5,7 @@
 
 const HouseStart = {
   x: 48.45, // percent — center of playArea
-  y: 50.7,  // percent — center of playArea
+  y: 44,    // percent — moved up from playArea center
   sprite: 'assets/house/HouseStart.png',
   width: 132,  // px — must match #HouseStart CSS width
   height: 132, // px — must match #HouseStart CSS height
@@ -24,7 +24,7 @@ function renderHouseStart() {
 renderHouseStart();
 
 // Computes HouseStart's collision box in percent-of-map coordinates.
-// Only the bottom 85% of the house blocks the player — the top 15% is
+// Only the bottom 75% of the house blocks the player — the top 25% is
 // left passable so the player can walk through that strip and appear
 // behind the house.
 function getHouseCollisionBoxPercent() {
@@ -42,7 +42,7 @@ function getHouseCollisionBoxPercent() {
   const top = HouseStart.y - halfHeightPercent;
   const bottom = HouseStart.y + halfHeightPercent;
 
-  const collisionTop = top + (bottom - top) * 0.15; // skip the top 15%
+  const collisionTop = top + (bottom - top) * 0.25; // skip the top 25%
 
   return { left, right, top: collisionTop, bottom };
 }

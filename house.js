@@ -30,6 +30,10 @@ renderHouseStart();
 const HOUSE_COLLISION_SCALE_X = 0.7;
 const HOUSE_COLLISION_SCALE_Y = 0.4;
 
+// Pulls the box's BOTTOM edge up by this amount (percent-of-map units).
+// Top edge is untouched — this only shrinks the box from below.
+const HOUSE_COLLISION_BOTTOM_INSET = 3;
+
 // Computes HouseStart's collision box in percent-of-map coordinates.
 // Base size comes from the actual rendered #HouseStart element, then
 // scaled by HOUSE_COLLISION_SCALE_X/Y above. Top 20% of the resulting
@@ -57,10 +61,13 @@ function getHouseCollisionBoxPercent() {
   const left = HouseStart.x - scaledWidth / 2;
   const right = HouseStart.x + scaledWidth / 2;
 
-  // height: scaled from the bottom edge up (foundation stays fixed)
+  // height: scaled from the bottom edge up (foundation stays fixed) —
+  // top edge computed from the original, untouched fullBottom
   const scaledHeight = (fullBottom - fullTop) * HOUSE_COLLISION_SCALE_Y;
-  const bottom = fullBottom;
   const top = fullBottom - scaledHeight;
+
+  // only the bottom edge gets pulled up — top stays exactly where it was
+  const bottom = fullBottom - HOUSE_COLLISION_BOTTOM_INSET;
 
   const collisionTop = top + (bottom - top) * 0.2; // top 20% passable
 

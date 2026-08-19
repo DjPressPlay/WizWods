@@ -22,6 +22,14 @@
     justify-content: center;
     padding-top: 20px;
     box-sizing: border-box;
+    pointer-events: none; /* let clicks pass through to the map underneath */
+  }
+
+  /* re-enable clicks only on game-page's actual interactive elements */
+  #player-icon-container,
+  #movement-controller-container,
+  #special-button-container {
+    pointer-events: auto;
   }
 
   /* ===== MOVEMENT CONTROLLER CONTAINER (WASD keys, bottom left of screen) ===== */

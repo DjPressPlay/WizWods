@@ -24,7 +24,7 @@ renderHouseStart();
 // 1.0 = matches the sprite exactly. <1 shrinks the box (e.g. 0.6 = only
 // the middle 60% of the house blocks). >1 grows it beyond the sprite's
 // edges. Tune this to change collision size without resizing the sprite.
-const HOUSE_COLLISION_SCALE_X = 1.0;
+const HOUSE_COLLISION_SCALE_X = 0.85;
 const HOUSE_COLLISION_SCALE_Y = 0.3;
 
 // Computes HouseStart's collision box in percent-of-map coordinates.

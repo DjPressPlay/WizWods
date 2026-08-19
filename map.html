@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -337,14 +336,23 @@
       const isFacingRight = player.direction === 'right';
       const spriteDirection = isFacingRight ? 'left' : player.direction;
 
+      // atk is the reverse: 'right' is the stored sprite, 'left' reuses it mirrored.
+      const isAtkFacingLeft = player.direction === 'left';
+      const atkDirection = isAtkFacingLeft ? 'right' : player.direction;
+      const isAtk = player.effect === 'atk';
+
       const content = player.effect
-        ? EFFECTS[player.effect][player.effectFrame]
+        ? isAtk
+          ? EFFECTS.atk[atkDirection][player.effectFrame]
+          : EFFECTS[player.effect][player.effectFrame]
         : player.state === 'idle'
           ? IDLE_SPRITE
           : SPRITES[spriteDirection][player.state][player.frameIndex];
 
+      const mirrored = isAtk ? isAtkFacingLeft : isFacingRight;
+
       if (typeof crossfadeSprite === 'function') {
-        crossfadeSprite('map-player-sprite', content, isFacingRight);
+        crossfadeSprite('map-player-sprite', content, mirrored);
       }
     }
     requestAnimationFrame(updateMapPlayerPosition);

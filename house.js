@@ -85,3 +85,63 @@ function blockHouseCollision(prevX, prevY) {
     player.vy = 0;
   }
 }
+
+// Splits the (invisible, sizing-only) #HouseStart image into two visible
+// slices — #HouseStart-back (top portion, z-index 10, behind the player)
+// and #HouseStart-front (bottom portion, z-index 3, in front of the
+// player). Split line = the collision box's bottom edge, so the visual
+// split lines up with where the player is actually free to walk again.
+function positionHouseSlices() {
+  const stageEl = document.getElementById('map-stage');
+  const houseEl = document.getElementById('HouseStart');
+  const backEl = document.getElementById('HouseStart-back');
+  const frontEl = document.getElementById('HouseStart-front');
+  if (!stageEl || !houseEl || !backEl || !frontEl) return;
+
+  const box = getHouseCollisionBoxPercent();
+  if (!box) return;
+
+  const stageRect = stageEl.getBoundingClientRect();
+  const houseRect = houseEl.getBoundingClientRect();
+  if (!houseRect.width || !houseRect.height) return;
+
+  const houseLeftPx = houseRect.left - stageRect.left;
+  const houseTopPx = houseRect.top - stageRect.top;
+  const houseWidthPx = houseRect.width;
+  const houseHeightPx = houseRect.height;
+
+  // box.bottom is percent-of-map-stage — convert to a px line, then to a
+  // fraction of the house's own height (0 = top of house, 1 = bottom).
+  const splitYPx = (box.bottom / 100) * stageRect.height;
+  let splitFraction = (splitYPx - houseTopPx) / houseHeightPx;
+  splitFraction = Math.max(0, Math.min(1, splitFraction));
+
+  const backHeightPx = houseHeightPx * splitFraction;
+  const frontHeightPx = houseHeightPx * (1 - splitFraction);
+
+  // top slice
+  backEl.style.left = houseLeftPx + 'px';
+  backEl.style.top = houseTopPx + 'px';
+  backEl.style.width = houseWidthPx + 'px';
+  backEl.style.height = backHeightPx + 'px';
+  const backImg = backEl.querySelector('img');
+  backImg.src = HouseStart.sprite;
+  backImg.style.width = houseWidthPx + 'px';
+  backImg.style.height = houseHeightPx + 'px';
+  backImg.style.top = '0px';
+
+  // bottom slice — same full image, shifted up inside its own clipped
+  // container so only the lower portion shows
+  frontEl.style.left = houseLeftPx + 'px';
+  frontEl.style.top = (houseTopPx + backHeightPx) + 'px';
+  frontEl.style.width = houseWidthPx + 'px';
+  frontEl.style.height = frontHeightPx + 'px';
+  const frontImg = frontEl.querySelector('img');
+  frontImg.src = HouseStart.sprite;
+  frontImg.style.width = houseWidthPx + 'px';
+  frontImg.style.height = houseHeightPx + 'px';
+  frontImg.style.top = (-backHeightPx) + 'px';
+}
+
+positionHouseSlices();
+window.addEventListener('resize', positionHouseSlices);

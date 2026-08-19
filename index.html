@@ -510,7 +510,7 @@
     spark.addEventListener('animationend', () => spark.remove());
   }
 
-  gamePageEl.addEventListener('click', (e) => {
+  document.addEventListener('click', (e) => {
     if (e.button !== 0) return;
     const rect = gamePageEl.getBoundingClientRect();
     spawnClickSpark(e.clientX - rect.left, e.clientY - rect.top);

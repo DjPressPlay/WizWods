@@ -21,10 +21,13 @@ function renderHouseStart() {
 renderHouseStart();
 
 // Scales the collision box relative to the rendered sprite size.
-// 1.0 = matches the sprite exactly. <1 shrinks the box (e.g. 0.6 = only
-// the middle 60% of the house blocks). >1 grows it beyond the sprite's
-// edges. Tune this to change collision size without resizing the sprite.
-const HOUSE_COLLISION_SCALE_X = 0.85;
+// 1.0 = matches the sprite exactly. <1 shrinks the box, >1 grows it.
+//   - X shrinks/grows evenly from the CENTER (left + right walls move
+//     in/out equally).
+//   - Y shrinks/grows anchored to the BOTTOM edge (the foundation stays
+//     fixed in place; shrinking pulls the top edge down toward the roof
+//     instead of shrinking toward the middle of the house).
+const HOUSE_COLLISION_SCALE_X = 1.0;
 const HOUSE_COLLISION_SCALE_Y = 0.3;
 
 // Computes HouseStart's collision box in percent-of-map coordinates.
@@ -40,13 +43,24 @@ function getHouseCollisionBoxPercent() {
   const houseRect = houseEl.getBoundingClientRect();
   if (!stageRect.width || !stageRect.height) return null;
 
-  const halfWidthPercent = (houseRect.width * HOUSE_COLLISION_SCALE_X / 2 / stageRect.width) * 100;
-  const halfHeightPercent = (houseRect.height * HOUSE_COLLISION_SCALE_Y / 2 / stageRect.height) * 100;
+  // full (unscaled) box edges, centered on HouseStart.x/y
+  const fullHalfWidthPercent = (houseRect.width / 2 / stageRect.width) * 100;
+  const fullHalfHeightPercent = (houseRect.height / 2 / stageRect.height) * 100;
 
-  const left = HouseStart.x - halfWidthPercent;
-  const right = HouseStart.x + halfWidthPercent;
-  const top = HouseStart.y - halfHeightPercent;
-  const bottom = HouseStart.y + halfHeightPercent;
+  const fullLeft = HouseStart.x - fullHalfWidthPercent;
+  const fullRight = HouseStart.x + fullHalfWidthPercent;
+  const fullTop = HouseStart.y - fullHalfHeightPercent;
+  const fullBottom = HouseStart.y + fullHalfHeightPercent;
+
+  // width: scaled evenly from center
+  const scaledWidth = (fullRight - fullLeft) * HOUSE_COLLISION_SCALE_X;
+  const left = HouseStart.x - scaledWidth / 2;
+  const right = HouseStart.x + scaledWidth / 2;
+
+  // height: scaled from the bottom edge up (foundation stays fixed)
+  const scaledHeight = (fullBottom - fullTop) * HOUSE_COLLISION_SCALE_Y;
+  const bottom = fullBottom;
+  const top = fullBottom - scaledHeight;
 
   const collisionTop = top + (bottom - top) * 0.2; // top 20% passable
 

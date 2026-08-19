@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,29 +75,6 @@
     max-height: 155px;
     width: auto;
     height: auto;
-    visibility: hidden; /* kept only as a sizing/position reference for
-                            collision + slice math — not what's drawn */
-  }
-
-  /* Two independently z-indexed slices of the SAME house image, split at
-     runtime by house.js at the collision box's bottom edge. */
-  #HouseStart-back,
-  #HouseStart-front {
-    position: absolute;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  #HouseStart-back {
-    z-index: 10; /* same as before — stays above the player */
-  }
-  #HouseStart-front {
-    z-index: 3; /* below player's z-index:5 — renders in front visually */
-  }
-  #HouseStart-back img,
-  #HouseStart-front img {
-    display: block;
-    position: absolute;
-    left: 0;
   }
 
   /* ===== ZONE NAME / DESCRIPTION LABEL ===== */
@@ -272,8 +250,6 @@
     <div id="HouseStart">
       <img id="HouseStart-img" alt="house">
     </div>
-    <div id="HouseStart-back"><img alt=""></div>
-    <div id="HouseStart-front"><img alt=""></div>
 
     <div id="map-player-sprite">
       <img id="map-player-sprite-a" class="sprite-layer" alt="player">

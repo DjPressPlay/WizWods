@@ -84,64 +84,23 @@ function blockHouseCollision(prevX, prevY) {
     player.vx = 0;
     player.vy = 0;
   }
+
+  updateHouseDepth(box);
 }
 
-// Splits the (invisible, sizing-only) #HouseStart image into two visible
-// slices — #HouseStart-back (top portion, z-index 10, behind the player)
-// and #HouseStart-front (bottom portion, z-index 3, in front of the
-// player). Split line = the collision box's bottom edge, so the visual
-// split lines up with where the player is actually free to walk again.
-function positionHouseSlices() {
-  const stageEl = document.getElementById('map-stage');
+// Player's #map-player-sprite has z-index:5 (set in map.html).
+// HouseStart's z-index is normally 10 (above the player, i.e. behind it
+// visually). Once the player's y is at or past the collision box's top
+// edge — walking alongside/past the base of the house — drop HouseStart
+// below the player's z-index so it renders in front instead, giving the
+// illusion the player has walked past/in front of the house's base.
+const HOUSE_Z_BEHIND = 10; // above player — player appears behind house
+const HOUSE_Z_FRONT = 3;   // below player — player appears in front of house
+
+function updateHouseDepth(box) {
   const houseEl = document.getElementById('HouseStart');
-  const backEl = document.getElementById('HouseStart-back');
-  const frontEl = document.getElementById('HouseStart-front');
-  if (!stageEl || !houseEl || !backEl || !frontEl) return;
+  if (!houseEl) return;
 
-  const box = getHouseCollisionBoxPercent();
-  if (!box) return;
-
-  const stageRect = stageEl.getBoundingClientRect();
-  const houseRect = houseEl.getBoundingClientRect();
-  if (!houseRect.width || !houseRect.height) return;
-
-  const houseLeftPx = houseRect.left - stageRect.left;
-  const houseTopPx = houseRect.top - stageRect.top;
-  const houseWidthPx = houseRect.width;
-  const houseHeightPx = houseRect.height;
-
-  // box.bottom is percent-of-map-stage — convert to a px line, then to a
-  // fraction of the house's own height (0 = top of house, 1 = bottom).
-  const splitYPx = (box.bottom / 100) * stageRect.height;
-  let splitFraction = (splitYPx - houseTopPx) / houseHeightPx;
-  splitFraction = Math.max(0, Math.min(1, splitFraction));
-
-  const backHeightPx = houseHeightPx * splitFraction;
-  const frontHeightPx = houseHeightPx * (1 - splitFraction);
-
-  // top slice
-  backEl.style.left = houseLeftPx + 'px';
-  backEl.style.top = houseTopPx + 'px';
-  backEl.style.width = houseWidthPx + 'px';
-  backEl.style.height = backHeightPx + 'px';
-  const backImg = backEl.querySelector('img');
-  backImg.src = HouseStart.sprite;
-  backImg.style.width = houseWidthPx + 'px';
-  backImg.style.height = houseHeightPx + 'px';
-  backImg.style.top = '0px';
-
-  // bottom slice — same full image, shifted up inside its own clipped
-  // container so only the lower portion shows
-  frontEl.style.left = houseLeftPx + 'px';
-  frontEl.style.top = (houseTopPx + backHeightPx) + 'px';
-  frontEl.style.width = houseWidthPx + 'px';
-  frontEl.style.height = frontHeightPx + 'px';
-  const frontImg = frontEl.querySelector('img');
-  frontImg.src = HouseStart.sprite;
-  frontImg.style.width = houseWidthPx + 'px';
-  frontImg.style.height = houseHeightPx + 'px';
-  frontImg.style.top = (-backHeightPx) + 'px';
+  const wantFront = player.y >= box.top;
+  houseEl.style.zIndex = wantFront ? HOUSE_Z_FRONT : HOUSE_Z_BEHIND;
 }
-
-positionHouseSlices();
-window.addEventListener('resize', positionHouseSlices);

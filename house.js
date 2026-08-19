@@ -20,10 +20,16 @@ function renderHouseStart() {
 
 renderHouseStart();
 
+// Scales the collision box relative to the rendered sprite size.
+// 1.0 = matches the sprite exactly. <1 shrinks the box (e.g. 0.6 = only
+// the middle 60% of the house blocks). >1 grows it beyond the sprite's
+// edges. Tune this to change collision size without resizing the sprite.
+const HOUSE_COLLISION_SCALE_X = 1.0;
+const HOUSE_COLLISION_SCALE_Y = 1.0;
+
 // Computes HouseStart's collision box in percent-of-map coordinates.
-// Size comes directly from the actual rendered #HouseStart element —
-// not a separate hardcoded number — so it's always relative to whatever
-// size is really on screen, no manual syncing needed. Top 20% of the
+// Base size comes from the actual rendered #HouseStart element, then
+// scaled by HOUSE_COLLISION_SCALE_X/Y above. Top 20% of the resulting
 // box is passable — the bottom 80% blocks the player.
 function getHouseCollisionBoxPercent() {
   const stageEl = document.getElementById('map-stage');
@@ -34,8 +40,8 @@ function getHouseCollisionBoxPercent() {
   const houseRect = houseEl.getBoundingClientRect();
   if (!stageRect.width || !stageRect.height) return null;
 
-  const halfWidthPercent = (houseRect.width / 2 / stageRect.width) * 100;
-  const halfHeightPercent = (houseRect.height / 2 / stageRect.height) * 100;
+  const halfWidthPercent = (houseRect.width * HOUSE_COLLISION_SCALE_X / 2 / stageRect.width) * 100;
+  const halfHeightPercent = (houseRect.height * HOUSE_COLLISION_SCALE_Y / 2 / stageRect.height) * 100;
 
   const left = HouseStart.x - halfWidthPercent;
   const right = HouseStart.x + halfWidthPercent;

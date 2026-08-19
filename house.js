@@ -27,8 +27,8 @@ renderHouseStart();
 //   - Y shrinks/grows anchored to the BOTTOM edge (the foundation stays
 //     fixed in place; shrinking pulls the top edge down toward the roof
 //     instead of shrinking toward the middle of the house).
-const HOUSE_COLLISION_SCALE_X = 1.0;
-const HOUSE_COLLISION_SCALE_Y = 0.3;
+const HOUSE_COLLISION_SCALE_X = 0.7;
+const HOUSE_COLLISION_SCALE_Y = 0.4;
 
 // Computes HouseStart's collision box in percent-of-map coordinates.
 // Base size comes from the actual rendered #HouseStart element, then

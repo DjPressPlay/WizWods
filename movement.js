@@ -31,7 +31,11 @@ const SPRITES = {
 
 // separate overlay array — NOT part of STATES
 const EFFECTS = {
-  atk:     ['assets/player/atk.png'],
+  atk: {
+    down:  ['assets/player/atk_down.png'],
+    up:    ['assets/player/atk_up.png'],
+    right: ['assets/player/atk_right.png'], // 'left' reuses this, mirrored
+  },
   get_dmg: ['assets/player/get_dmg.png'],
 };
 
@@ -204,13 +208,23 @@ function renderPlayerIcon() {
   const isFacingRight = player.direction === 'right';
   const spriteDirection = isFacingRight ? 'left' : player.direction;
 
+  // atk is the reverse: 'right' is the stored sprite, 'left' reuses it mirrored.
+  const isAtkFacingLeft = player.direction === 'left';
+  const atkDirection = isAtkFacingLeft ? 'right' : player.direction;
+
+  const isAtk = player.effect === 'atk';
+
   const content = player.effect
-    ? EFFECTS[player.effect][player.effectFrame]
+    ? isAtk
+      ? EFFECTS.atk[atkDirection][player.effectFrame]
+      : EFFECTS[player.effect][player.effectFrame]
     : player.state === 'idle'
       ? IDLE_SPRITE
       : SPRITES[spriteDirection][player.state][player.frameIndex];
 
-  crossfadeSprite('player-icon-sprite', content, isFacingRight);
+  const mirrored = isAtk ? isAtkFacingLeft : isFacingRight;
+
+  crossfadeSprite('player-icon-sprite', content, mirrored);
 }
 
 // ===== MOVEMENT INPUT =====
@@ -345,6 +359,14 @@ setInterval(() => {
   clampToPlayArea();
   blockHouseCollision(prevX, prevY);
   checkZoneProximity();
+
+  if (player.effect === 'atk' && attackTicksLeft > 0) {
+    attackTicksLeft--;
+    if (attackTicksLeft === 0) {
+      player.effect = null;
+      renderPlayerIcon();
+    }
+  }
 }, TICK_MS);
 
 // ===== SPECIAL BUTTON → ATTACK =====
@@ -370,4 +392,23 @@ if (specialAttackButtonEl) {
   specialAttackButtonEl.addEventListener('mouseleave', stopAttack);
   specialAttackButtonEl.addEventListener('touchstart', startAttack);
   specialAttackButtonEl.addEventListener('touchend', stopAttack);
+}
+
+// ===== ATTACK TRIGGER (click / touch on the map) =====
+// One click/tap = one attack: shows the atk pose for ATTACK_DURATION_TICKS
+// ticks (counted down in the tick loop above), then reverts on its own.
+const ATTACK_DURATION_TICKS = 15; // ~250ms at TICK_MS=16
+let attackTicksLeft = 0;
+
+function triggerAttack() {
+  if (gameFrozen) return;
+  player.effect = 'atk';
+  player.effectFrame = 0;
+  attackTicksLeft = ATTACK_DURATION_TICKS;
+  renderPlayerIcon();
+}
+
+const mapStageEl = document.getElementById('map-stage');
+if (mapStageEl) {
+  mapStageEl.addEventListener('click', triggerAttack);
 }

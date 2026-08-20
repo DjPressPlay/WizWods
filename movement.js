@@ -39,6 +39,8 @@ const EFFECTS = {
   get_dmg: ['assets/player/get_dmg.png'],
 };
 
+const GET_DMG_SCALE = 0.85; // 1 = normal size, lower = smaller
+
 const player = {
   direction: 'down',
   state: 'idle',
@@ -177,11 +179,15 @@ function closeZoneOverlay() {
 // a wrapper element (id="baseId"). The new frame fades IN while the old frame
 // fades OUT at the same time, so there's never a moment where the sprite is
 // fully invisible (unlike a fade-out-then-swap-then-fade-in approach).
-function crossfadeSprite(baseId, newSrc, mirrored) {
+function crossfadeSprite(baseId, newSrc, mirrored, scale = 1) {
   const wrapper = document.getElementById(baseId);
   if (!wrapper) return;
 
-  if (wrapper.dataset.currentSrc === newSrc && wrapper.dataset.mirrored === String(mirrored)) return;
+  if (
+    wrapper.dataset.currentSrc === newSrc &&
+    wrapper.dataset.mirrored === String(mirrored) &&
+    wrapper.dataset.scale === String(scale)
+  ) return;
 
   const layerA = document.getElementById(baseId + '-a');
   const layerB = document.getElementById(baseId + '-b');
@@ -190,13 +196,14 @@ function crossfadeSprite(baseId, newSrc, mirrored) {
   const back = frontIsA ? layerB : layerA;
 
   back.src = newSrc;
-  back.style.transform = mirrored ? 'scaleX(-1)' : 'scaleX(1)';
+  back.style.transform = `scale(${mirrored ? -scale : scale}, ${scale})`;
   back.style.opacity = '1';
   front.style.opacity = '0';
 
   wrapper.dataset.front = frontIsA ? 'b' : 'a';
   wrapper.dataset.currentSrc = newSrc;
   wrapper.dataset.mirrored = String(mirrored);
+  wrapper.dataset.scale = String(scale);
 }
 
 // Reads current player state and writes the matching sprite into the DOM.
@@ -223,8 +230,9 @@ function renderPlayerIcon() {
       : SPRITES[spriteDirection][player.state][player.frameIndex];
 
   const mirrored = isAtk ? isAtkFacingLeft : isFacingRight;
+  const scale = player.effect === 'get_dmg' ? GET_DMG_SCALE : 1;
 
-  crossfadeSprite('player-icon-sprite', content, mirrored);
+  crossfadeSprite('player-icon-sprite', content, mirrored, scale);
 }
 
 // ===== MOVEMENT INPUT =====

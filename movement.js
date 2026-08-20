@@ -39,7 +39,7 @@ const EFFECTS = {
   get_dmg: ['assets/player/get_dmg.png'],
 };
 
-const GET_DMG_SCALE = 0.85; // 1 = normal size, lower = smaller
+const GET_DMG_SCALE = 0.55; // 1 = normal size, lower = smaller
 
 const player = {
   direction: 'down',

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -357,9 +357,10 @@
           : SPRITES[spriteDirection][player.state][player.frameIndex];
 
       const mirrored = isAtk ? isAtkFacingLeft : isFacingRight;
+      const scale = player.effect === 'get_dmg' ? GET_DMG_SCALE : 1;
 
       if (typeof crossfadeSprite === 'function') {
-        crossfadeSprite('map-player-sprite', content, mirrored);
+        crossfadeSprite('map-player-sprite', content, mirrored, scale);
       }
     }
     requestAnimationFrame(updateMapPlayerPosition);

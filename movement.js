@@ -40,6 +40,7 @@ const EFFECTS = {
 };
 
 const GET_DMG_SCALE = 0.25; // 1 = normal size, lower = smaller
+const ATK_DOWN_SCALE = 0.25; // 1 = normal size, lower = smaller
 
 const player = {
   direction: 'down',
@@ -230,7 +231,11 @@ function renderPlayerIcon() {
       : SPRITES[spriteDirection][player.state][player.frameIndex];
 
   const mirrored = isAtk ? isAtkFacingLeft : isFacingRight;
-  const scale = player.effect === 'get_dmg' ? GET_DMG_SCALE : 1;
+  const scale = player.effect === 'get_dmg'
+    ? GET_DMG_SCALE
+    : (isAtk && player.direction === 'down')
+      ? ATK_DOWN_SCALE
+      : 1;
 
   crossfadeSprite('player-icon-sprite', content, mirrored, scale);
 }

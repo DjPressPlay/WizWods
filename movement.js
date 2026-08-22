@@ -40,7 +40,7 @@ const EFFECTS = {
 };
 
 const GET_DMG_SCALE = 0.25; // 1 = normal size, lower = smaller
-const ATK_DOWN_SCALE = 0.75; // 1 = normal size, lower = smaller
+const ATK_DOWN_SCALE = 0.25; // 1 = normal size, lower = smaller
 
 const player = {
   direction: 'down',
@@ -413,8 +413,26 @@ if (specialAttackButtonEl) {
 const ATTACK_DURATION_TICKS = 15; // ~250ms at TICK_MS=16
 let attackTicksLeft = 0;
 
-function triggerAttack() {
+function triggerAttack(e) {
   if (gameFrozen) return;
+
+  // Aim: face the direction of the click, snapped to the nearest of the
+  // 4 sprite directions (up/down/left/right) — same as a real swing,
+  // this overrides whatever direction walking had set.
+  if (e && mapStageEl) {
+    const rect = mapStageEl.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    const playerX = (player.x / 100) * rect.width;
+    const playerY = (player.y / 100) * rect.height;
+    const dx = clickX - playerX;
+    const dy = clickY - playerY;
+
+    player.direction = Math.abs(dx) > Math.abs(dy)
+      ? (dx > 0 ? 'right' : 'left')
+      : (dy > 0 ? 'down' : 'up');
+  }
+
   player.effect = 'atk';
   player.effectFrame = 0;
   attackTicksLeft = ATTACK_DURATION_TICKS;

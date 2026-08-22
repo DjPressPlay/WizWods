@@ -18,7 +18,8 @@
 //
 // Runs its OWN tick loop (separate setInterval), not a line added into
 // movement.js's loop — enemy logic is meant to stay fully independent of
-// player movement code.
+// player movement code. Does NOT run on its own — gameStart.js calls
+// startALevelEnemies() once its round-start countdown finishes.
 
 const A_LEVEL_TICK_MS = 16;        // matches movement.js's TICK_MS, same speed feel
 const A_LEVEL_DRIFT_SPEED = 0.12;  // percent-of-stage-width moved per tick
@@ -124,36 +125,11 @@ function tickALevelEnemies() {
   });
 }
 
-// ===== TEMP: 3-2-1 SPAWN COUNTDOWN =====
-// PLACEHOLDER — this whole block belongs in a dedicated game-start.js
-// (title screen / round-start sequence) once that file exists. It lives
-// here for now only so the first enemy spawn has something gating it
-// instead of firing the instant the page loads. Move this out wholesale
-// when game-start.js is created — nothing else in this file depends on it
-// except the two calls at the bottom (spawnALevelTestEnemies + the tick
-// interval start).
-const A_LEVEL_COUNTDOWN_SECONDS = 3;
-
-function runALevelSpawnCountdown() {
-  let count = A_LEVEL_COUNTDOWN_SECONDS;
-  const el = document.getElementById('a-level-countdown');
-
-  if (el) {
-    el.style.display = 'flex';
-    el.textContent = String(count);
-  }
-
-  const countdownTimer = setInterval(() => {
-    count--;
-    if (count > 0) {
-      if (el) el.textContent = String(count);
-    } else {
-      clearInterval(countdownTimer);
-      if (el) el.style.display = 'none';
-      spawnALevelTestEnemies();
-      setInterval(tickALevelEnemies, A_LEVEL_TICK_MS);
-    }
-  }, 1000);
+// ===== START =====
+// Entry point called by gameStart.js once its round-start countdown
+// finishes. gameStart.js must be loaded AFTER this file (see map.html's
+// loadHud()) since it calls this directly.
+function startALevelEnemies() {
+  spawnALevelTestEnemies();
+  setInterval(tickALevelEnemies, A_LEVEL_TICK_MS);
 }
-
-runALevelSpawnCountdown();

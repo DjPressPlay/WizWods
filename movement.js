@@ -40,7 +40,7 @@ const EFFECTS = {
 };
 
 const GET_DMG_SCALE = 0.25; // 1 = normal size, lower = smaller
-const ATK_DOWN_SCALE = 0.25; // 1 = normal size, lower = smaller
+const ATK_DOWN_SCALE = 0.75; // 1 = normal size, lower = smaller
 
 const player = {
   direction: 'down',
